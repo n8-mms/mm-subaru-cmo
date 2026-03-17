@@ -233,6 +233,22 @@ const terminalLines = [
   "> 3 issues found. Ready for commands."
 ];
 
+/* ───────── MIDTOWN DATA ───────── */
+const midtownHealthData = {performance:0, accessibility:0, bestPractices:0, seo:0};
+const midtownSeoHealth = [];
+const midtownCoreWebVitals = [];
+const midtownSeoIssues = [];
+const midtownPassedChecks = [];
+const midtownTerminalLines = ["$ Midtown audit data loading..."];
+
+/* ───────── SOUTH TOWNE DATA ───────── */
+const southtowneHealthData = {performance:0, accessibility:0, bestPractices:0, seo:0};
+const southtowneSeoHealth = [];
+const southtowneCoreWebVitals = [];
+const southtowneSeoIssues = [];
+const southtownePassedChecks = [];
+const southtowneTerminalLines = ["$ South Towne audit data loading..."];
+
 /* ───────── SUBARU DIGITAL ASSESSMENT SCORECARD ───────── */
 const scorecardData = {
   southTowne: {
@@ -370,6 +386,13 @@ function App() {
 
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 
+  const siteDataMap = {
+    main: { healthData, seoHealth, coreWebVitals, seoIssues, passedChecks, terminalLines },
+    midtown: { healthData: midtownHealthData, seoHealth: midtownSeoHealth, coreWebVitals: midtownCoreWebVitals, seoIssues: midtownSeoIssues, passedChecks: midtownPassedChecks, terminalLines: midtownTerminalLines },
+    southtowne: { healthData: southtowneHealthData, seoHealth: southtowneSeoHealth, coreWebVitals: southtowneCoreWebVitals, seoIssues: southtowneSeoIssues, passedChecks: southtownePassedChecks, terminalLines: southtowneTerminalLines },
+  };
+  const currentSite = siteDataMap[activeSite];
+
   const sendChat = () => {
     if(!chatInput.trim()) return;
     const input = chatInput.toLowerCase();
@@ -407,9 +430,9 @@ function App() {
           </div>
         </div>
         <div style={{background:"#030712",borderRadius:8,padding:12,maxHeight:160,overflowY:"auto"}}>
-          {terminalLines.map((l,i)=>(
+          {currentSite.terminalLines.map((l,i)=>(
             <div key={i} style={{color: l.startsWith("$")?"#22d3ee": l.includes("[CRITICAL]")?"#f87171": l.includes("[WARNING]")?"#fbbf24": l.includes("[PASS]")?"#4ade80":"#4ade80"}}>
-              {l}{i===terminalLines.length-1 && <span className="animate-pulse" style={{display:"inline-block",width:8,height:16,background:"#4ade80",marginLeft:4,verticalAlign:"middle"}}/>}
+              {l}{i===currentSite.terminalLines.length-1 && <span className="animate-pulse" style={{display:"inline-block",width:8,height:16,background:"#4ade80",marginLeft:4,verticalAlign:"middle"}}/>}
             </div>
           ))}
         </div>
@@ -421,23 +444,14 @@ function App() {
           {sites.map(s=>(
             <button key={s.id} onClick={()=>setActiveSite(s.id)} style={{padding:"12px 20px",fontSize:13,fontWeight:600,background:"transparent",border:"none",borderBottom:activeSite===s.id?"2px solid #2563eb":"2px solid transparent",color:activeSite===s.id?"#2563eb":"#6b7280",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
               {s.short}
-              {s.id==="main" && <span style={{marginLeft:6,fontSize:10,background:"#f0fdf4",color:"#16a34a",padding:"1px 6px",borderRadius:999}}>Live</span>}
+              <span style={{marginLeft:6,fontSize:10,background:"#f0fdf4",color:"#16a34a",padding:"1px 6px",borderRadius:999}}>Live</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* COMING SOON for non-main sites */}
-      {activeSite !== "main" ? (
-        <div style={{maxWidth:1200,margin:"0 auto",padding:48,textAlign:"center"}}>
-          <div style={{...card,padding:48,maxWidth:500,margin:"0 auto"}}>
-            <IconGlobe size={48} color="#d1d5db"/>
-            <h2 style={{margin:"16px 0 8px",fontSize:20,fontWeight:700,color:"#1f2937"}}>{sites.find(s=>s.id===activeSite)?.label}</h2>
-            <p style={{fontSize:14,color:"#6b7280",margin:0}}>Audit data for this site will appear here once the daily scraper is configured for this domain. Switch to <button onClick={()=>setActiveSite("main")} style={{color:"#2563eb",background:"none",border:"none",cursor:"pointer",fontWeight:600,fontSize:14}}>Main Site</button> to view live data.</p>
-          </div>
-        </div>
-      ) : (
-      /* MAIN GRID */
+      {/* MAIN GRID */}
+      {(
       <div style={{maxWidth:1200,margin:"0 auto",padding:24,display:"grid",gridTemplateColumns:"2fr 3fr",gap:24}}>
         {/* LEFT COLUMN */}
         <div style={{display:"flex",flexDirection:"column",gap:24}}>
@@ -467,9 +481,9 @@ function App() {
           <div style={card}>
             <div style={{padding:16,borderBottom:"1px solid #f3f4f6"}}><h3 style={{margin:0,fontWeight:700,color:"#111827"}}>AI CMO Feed</h3></div>
 
-            <Section icon={<IconSearch size={16} color="#16a34a"/>} title="SEO + GEO Recommendations" subtitle={`Found ${seoIssues.length} issues`} expanded={seoOpen} onToggle={()=>setSeoOpen(!seoOpen)}>
+            <Section icon={<IconSearch size={16} color="#16a34a"/>} title="SEO + GEO Recommendations" subtitle={`Found ${currentSite.seoIssues.length} issues`} expanded={seoOpen} onToggle={()=>setSeoOpen(!seoOpen)}>
               <div style={{display:"flex",flexDirection:"column",gap:12}}>
-                {seoIssues.map((issue,i)=>(
+                {currentSite.seoIssues.map((issue,i)=>(
                   <div key={i} style={{background:"#f9fafb",borderRadius:8,padding:12}}>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
                       <span style={{fontSize:13,fontWeight:600,color:"#1f2937",paddingRight:12}}>{issue.title}</span>
@@ -557,13 +571,13 @@ function App() {
               {tab==="health" && <div>
                 <h4 style={{margin:"0 0 16px",fontWeight:600,color:"#1f2937"}}>Page Speed (Mobile Lighthouse)</h4>
                 <div style={{display:"flex",justifyContent:"space-around",marginBottom:24}}>
-                  <ScoreCircle score={healthData.performance} label="Performance"/>
-                  <ScoreCircle score={healthData.accessibility} label="Accessibility"/>
-                  <ScoreCircle score={healthData.bestPractices} label="Best Practices"/>
-                  <ScoreCircle score={healthData.seo} label="SEO"/>
+                  <ScoreCircle score={currentSite.healthData.performance} label="Performance"/>
+                  <ScoreCircle score={currentSite.healthData.accessibility} label="Accessibility"/>
+                  <ScoreCircle score={currentSite.healthData.bestPractices} label="Best Practices"/>
+                  <ScoreCircle score={currentSite.healthData.seo} label="SEO"/>
                 </div>
                 <h4 style={{margin:"0 0 12px",fontWeight:600,color:"#1f2937"}}>SEO Health</h4>
-                {seoHealth.map((item,i)=>(
+                {currentSite.seoHealth.map((item,i)=>(
                   <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:"1px solid #f9fafb"}}>
                     <div style={{display:"flex",alignItems:"center",gap:8}}>
                       {item.pass ? <IconCheck size={16} color="#22c55e"/> : <IconAlert size={16} color="#ef4444"/>}
@@ -705,7 +719,7 @@ function App() {
               {tab==="cwv" && <div>
                 <h4 style={{margin:"0 0 16px",fontWeight:600,color:"#1f2937"}}>Core Web Vitals (Real User Data)</h4>
                 <p style={{fontSize:12,color:"#6b7280",margin:"0 0 16px"}}>Field data from Chrome UX Report — reflects actual user experience.</p>
-                {coreWebVitals.map((v,i)=>(
+                {currentSite.coreWebVitals.map((v,i)=>(
                   <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:"1px solid #f9fafb"}}>
                     <span style={{fontSize:13,color:"#374151"}}>{v.label}</span>
                     <span style={{fontSize:14,fontWeight:700,color:v.status==="green"?"#16a34a":v.status==="orange"?"#f97316":"#dc2626"}}>{v.value}</span>
@@ -718,9 +732,9 @@ function App() {
               </div>}
 
               {tab==="passed" && <div>
-                <h4 style={{margin:"0 0 12px",fontWeight:600,color:"#1f2937"}}>Passed Checks ({passedChecks.length})</h4>
+                <h4 style={{margin:"0 0 12px",fontWeight:600,color:"#1f2937"}}>Passed Checks ({currentSite.passedChecks.length})</h4>
                 <div style={{maxHeight:320,overflowY:"auto"}}>
-                  {passedChecks.map((c,i)=>(
+                  {currentSite.passedChecks.map((c,i)=>(
                     <div key={i} style={{display:"flex",gap:12,padding:"8px 0",borderBottom:"1px solid #f9fafb"}}>
                       <IconCheck size={16} color="#22c55e" style={{flexShrink:0,marginTop:2}}/>
                       <div><div style={{fontSize:13,fontWeight:600,color:"#1f2937"}}>{c.title}</div><div style={{fontSize:12,color:"#6b7280"}}>{c.desc}</div></div>

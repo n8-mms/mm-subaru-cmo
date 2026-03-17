@@ -7,7 +7,11 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import https from 'node:https';
 
-const TARGET_URL = 'https://www.markmillersubaru.com/';
+const SITES = [
+  { id: "main", url: "https://www.markmillersubaru.com/" },
+  { id: "midtown", url: "https://www.markmillersubarumidtown.com/" },
+  { id: "southtowne", url: "https://www.markmillersubarusouthtowne.com/" },
+];
 
 // ── Helpers ──
 
@@ -58,7 +62,7 @@ function postJSON(url, body, headers = {}) {
 
 // ── Scrape HTML ──
 
-function scrapeHTML(html) {
+function scrapeHTML(html, targetUrl) {
   const meta = (name) => {
     const m = html.match(new RegExp(`<meta[^>]+(?:name|property)=["']${name}["'][^>]+content=["']([^"']*)["']`, 'i'))
       || html.match(new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+(?:name|property)=["']${name}["']`, 'i'));
@@ -103,13 +107,13 @@ function scrapeHTML(html) {
   }
 
   // HTTPS
-  const isHTTPS = TARGET_URL.startsWith('https');
+  const isHTTPS = targetUrl.startsWith('https');
 
   // Mobile viewport
   const hasViewport = !!html.match(/<meta[^>]+name=["']viewport["']/i);
 
   // Internal links
-  const domain = new URL(TARGET_URL).hostname;
+  const domain = new URL(targetUrl).hostname;
   const links = [...html.matchAll(/href=["'](https?:\/\/[^"']*|\/[^"']*)/gi)];
   const internalLinks = links.filter((l) => {
     const href = l[1];
@@ -135,10 +139,10 @@ function scrapeHTML(html) {
 
 // ── PageSpeed Insights ──
 
-async function getPageSpeedData() {
-  const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(TARGET_URL)}&strategy=mobile&category=PERFORMANCE&category=ACCESSIBILITY&category=BEST_PRACTICES&category=SEO`;
+async function getPageSpeedData(targetUrl) {
+  const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(targetUrl)}&strategy=mobile&category=PERFORMANCE&category=ACCESSIBILITY&category=BEST_PRACTICES&category=SEO`;
 
-  console.log('Calling PageSpeed Insights API...');
+  console.log(`Calling PageSpeed Insights API for ${targetUrl}...`);
   const data = await fetchJSON(apiUrl);
 
   const cats = data.lighthouseResult?.categories || {};
@@ -188,7 +192,7 @@ async function getPageSpeedData() {
 
 // ── Build updated data ──
 
-function buildDataSection(scrape, psi) {
+function buildDataSection(scrape, psi, siteLabel = 'markmillersubaru.com') {
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'America/Denver' });
   const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Denver' });
@@ -260,7 +264,7 @@ function buildDataSection(scrape, psi) {
   const terminalLines = [
     '$ MM Subaru Growth Agent v1.0 — Live Audit',
     `> Last scan: ${dateStr} ${timeStr}`,
-    `> Scraped markmillersubaru.com — ${s.imgCount} images, ${s.internalLinks} internal links, ${s.wordCount} words`,
+    `> Scraped ${siteLabel} — ${s.imgCount} images, ${s.internalLinks} internal links, ${s.wordCount} words`,
   ];
   if (s.h1s.length === 0) terminalLines.push(`> - [CRITICAL] No H1 tag on homepage.${s.h2s.length > 0 ? ` Only H2: '${s.h2s[0]}'` : ''}`);
   if (scores.performance < 50) terminalLines.push(`> - [CRITICAL] Mobile Performance: ${scores.performance}/100 — LCP ${labLCP}, FCP ${labFCP}, TBT ${labTBT}`);
@@ -382,47 +386,59 @@ function replaceDataBlock(html, varName, newValue) {
   return html.replace(pattern, `$1${jsLiteral};$3`);
 }
 
-async function main() {
-  console.log(`Auditing ${TARGET_URL}...`);
+// ── Audit a single site ──
 
-  // Fetch page HTML
+async function auditSite(site) {
+  console.log(`\n── Auditing ${site.url} (${site.id}) ──`);
+
   console.log('Fetching page HTML...');
-  const html = await fetch(TARGET_URL);
+  const html = await fetch(site.url);
   console.log(`Fetched ${html.length} bytes of HTML`);
 
-  // Scrape
-  const scrape = scrapeHTML(html);
+  const scrape = scrapeHTML(html, site.url);
   console.log(`Found: ${scrape.imgCount} images, ${scrape.internalLinks} internal links, ${scrape.wordCount} words`);
-  console.log(`H1 tags: ${scrape.h1s.length}, H2 tags: ${scrape.h2s.length}, H3 tags: ${scrape.h3s.length}`);
 
-  // PageSpeed
-  const psi = await getPageSpeedData();
+  const psi = await getPageSpeedData(site.url);
   console.log(`Lighthouse scores: Perf=${psi.scores.performance}, A11y=${psi.scores.accessibility}, BP=${psi.scores.bestPractices}, SEO=${psi.scores.seo}`);
 
-  // Build data
-  const data = buildDataSection(scrape, psi);
+  const siteLabel = new URL(site.url).hostname.replace('www.', '');
+  const data = buildDataSection(scrape, psi, siteLabel);
 
-  // Get AI recommendations
-  const ai = await getAIRecommendations(scrape, psi);
+  return { site, scrape, psi, data };
+}
 
-  // Read and update index.html
+async function main() {
+  console.log('Auditing all 3 Mark Miller Subaru sites...');
+
+  // Scrape all 3 sites in parallel
+  const results = await Promise.all(SITES.map(s => auditSite(s)));
+
+  // Get AI recommendations based on main site only
+  const mainResult = results.find(r => r.site.id === 'main');
+  const ai = await getAIRecommendations(mainResult.scrape, mainResult.psi);
+
+  // Read index.html
   let indexHtml = await readFile('index.html', 'utf-8');
 
   // Update date comment
   indexHtml = indexHtml.replace(
     /\/\* ─+ DATA \(.*?\) ─+ \*\//,
-    `/* ───────── DATA (${data.dateComment}) ───────── */`
+    `/* ───────── DATA (${mainResult.data.dateComment}) ───────── */`
   );
 
-  // Replace each data block
-  indexHtml = replaceDataBlock(indexHtml, 'healthData', data.healthData);
-  indexHtml = replaceDataBlock(indexHtml, 'seoHealth', data.seoHealth);
-  indexHtml = replaceDataBlock(indexHtml, 'coreWebVitals', data.coreWebVitals);
-  indexHtml = replaceDataBlock(indexHtml, 'seoIssues', data.seoIssues);
-  indexHtml = replaceDataBlock(indexHtml, 'passedChecks', data.passedChecks);
-  indexHtml = replaceDataBlock(indexHtml, 'terminalLines', data.terminalLines);
+  // Variable name prefixes per site
+  const prefixes = { main: '', midtown: 'midtown', southtowne: 'southtowne' };
+  const dataFields = ['healthData', 'seoHealth', 'coreWebVitals', 'seoIssues', 'passedChecks', 'terminalLines'];
 
-  // Replace AI-generated content if available
+  for (const result of results) {
+    const prefix = prefixes[result.site.id];
+    for (const field of dataFields) {
+      const varName = prefix ? `${prefix}${field.charAt(0).toUpperCase()}${field.slice(1)}` : field;
+      indexHtml = replaceDataBlock(indexHtml, varName, result.data[field]);
+    }
+  }
+
+  // Replace AI-generated content if available (main site only)
   if (ai) {
     if (ai.contentIdeas?.length) {
       indexHtml = replaceDataBlock(indexHtml, 'contentIdeas', ai.contentIdeas);
@@ -430,28 +446,26 @@ async function main() {
     if (ai.socialPosts?.length) {
       indexHtml = replaceDataBlock(indexHtml, 'socialPosts', ai.socialPosts);
     }
-    // Add AI weekly recommendation as an actionable issue
     if (ai.seoRecommendation) {
-      data.seoIssues.push({
+      mainResult.data.seoIssues.push({
         title: 'AI CMO Weekly Priority',
         severity: 'Medium',
         category: 'AI Recommendation',
         details: ai.seoRecommendation,
       });
-      // Re-write seoIssues with the AI rec included
-      indexHtml = replaceDataBlock(indexHtml, 'seoIssues', data.seoIssues);
+      indexHtml = replaceDataBlock(indexHtml, 'seoIssues', mainResult.data.seoIssues);
     }
   }
 
   await writeFile('index.html', indexHtml, 'utf-8');
-  console.log('Updated index.html with fresh audit data.');
+  console.log('\nUpdated index.html with fresh audit data for all 3 sites.');
 
   // Summary
-  console.log('\n── Audit Summary ──');
-  console.log(`Issues: ${data.seoIssues.length}`);
-  console.log(`Passed: ${data.passedChecks.length}`);
+  for (const result of results) {
+    console.log(`\n── ${result.site.id} Summary ──`);
+    console.log(`Issues: ${result.data.seoIssues.length} | Passed: ${result.data.passedChecks.length}`);
+  }
   if (ai) console.log(`AI content ideas: ${ai.contentIdeas?.length || 0}, social posts: ${ai.socialPosts?.length || 0}`);
-  data.terminalLines.forEach((l) => console.log(l));
 }
 
 main().catch((err) => {
