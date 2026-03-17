@@ -24,20 +24,65 @@
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
-/* ───────── DATA (Live scraped March 16 2026) ───────── */
-const healthData = { performance: 18, accessibility: 89, bestPractices: 96, seo: 85 };
+/* ───────── DATA (Live scraped March 17, 2026) ───────── */
+const healthData = {
+  performance: 0,
+  accessibility: 0,
+  bestPractices: 0,
+  seo: 0
+};
 
 const seoHealth = [
-  { label: "Meta Title", value: "53 chars", pass: true },
-  { label: "Meta Description", value: "122 chars", pass: true },
-  { label: "Mobile Friendly", value: "Yes", pass: true },
-  { label: "H1 Tag", value: "Missing!", pass: false },
-  { label: "Images Missing Alt", value: "4 of 40", pass: false },
-  { label: "Open Graph", value: "Complete", pass: true },
-  { label: "Twitter Card", value: "Missing", pass: false },
-  { label: "Structured Data", value: "AutoDealer", pass: true },
-  { label: "HTTPS", value: "Yes", pass: true },
-  { label: "Canonical URL", value: "Set", pass: true },
+  {
+    label: "Meta Title",
+    value: "53 chars",
+    pass: true
+  },
+  {
+    label: "Meta Description",
+    value: "122 chars",
+    pass: true
+  },
+  {
+    label: "Mobile Friendly",
+    value: "Yes",
+    pass: true
+  },
+  {
+    label: "H1 Tag",
+    value: "Missing!",
+    pass: false
+  },
+  {
+    label: "Images Missing Alt",
+    value: "3 of 6",
+    pass: false
+  },
+  {
+    label: "Open Graph",
+    value: "Complete",
+    pass: true
+  },
+  {
+    label: "Twitter Card",
+    value: "Missing",
+    pass: false
+  },
+  {
+    label: "Structured Data",
+    value: "AutoDealer",
+    pass: true
+  },
+  {
+    label: "HTTPS",
+    value: "Yes",
+    pass: true
+  },
+  {
+    label: "Canonical URL",
+    value: "Set",
+    pass: true
+  }
 ];
 
 const backlinkStats = { domainAuthority: 55, referringDomains: 120, linkVelocity: "+5 Links/Month" };
@@ -52,62 +97,140 @@ const topReferring = [
 const geoData = { geoScore: 55, citationPotential: "Medium", visibility: 45, sentiment: 0.65 };
 
 const coreWebVitals = [
-  { label: "LCP (Field)", value: "1.6s", status: "green" },
-  { label: "INP (Field)", value: "138ms", status: "green" },
-  { label: "CLS (Field)", value: "0.2", status: "orange" },
-  { label: "FCP (Field)", value: "1.0s", status: "green" },
-  { label: "TTFB (Field)", value: "0.6s", status: "green" },
+  {
+    label: "LCP (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "INP (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "CLS (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "FCP (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "TTFB (Field)",
+    value: "N/A",
+    status: "gray"
+  }
 ];
 
 const passedChecks = [
-  { title: "Meta Title", desc: "'Welcome to Mark Miller Subaru | Subaru Dealer in Utah' — 53 chars (optimal)" },
-  { title: "Meta Description", desc: "122 chars — within optimal 70-160 range" },
-  { title: "Mobile Viewport", desc: "Viewport meta tag configured" },
-  { title: "HTTPS", desc: "Site is served over HTTPS" },
-  { title: "Canonical URL", desc: "Set to https://www.markmillersubaru.com/" },
-  { title: "Open Graph Tags", desc: "og:title, og:description, og:image all present" },
-  { title: "Structured Data", desc: "AutoDealer JSON-LD schema detected" },
-  { title: "Accessibility Score", desc: "89/100 — good" },
-  { title: "Best Practices", desc: "96/100 — excellent" },
-  { title: "SEO Score", desc: "85/100 — good" },
-  { title: "Content Depth", desc: "323 words on homepage — above 300 minimum" },
-  { title: "Internal Links", desc: "56 internal links found" },
-  { title: "CLS Score", desc: "Cumulative Layout Shift: 0 (green)" },
+  {
+    title: "Meta Title",
+    desc: "'Welcome to Mark Miller Subaru | Subaru Dealer in Utah' — 53 chars (optimal)"
+  },
+  {
+    title: "Meta Description",
+    desc: "122 chars — within optimal 70-160 range"
+  },
+  {
+    title: "Mobile Viewport",
+    desc: "Viewport meta tag configured"
+  },
+  {
+    title: "HTTPS",
+    desc: "Site is served over HTTPS"
+  },
+  {
+    title: "Canonical URL",
+    desc: "Set to https://www.markmillersubaru.com"
+  },
+  {
+    title: "Open Graph Tags",
+    desc: "og:title, og:description, og:image all present"
+  },
+  {
+    title: "Structured Data",
+    desc: "AutoDealer JSON-LD schema detected"
+  },
+  {
+    title: "Internal Links",
+    desc: "70 internal links found"
+  }
 ];
 
 const seoIssues = [
-  { title: "Missing H1 Tag & 4 Images Without Alt Text", severity: "Critical", category: "On-Page",
-    details: "LIVE DATA: Homepage has zero H1 tags — only an H2 ('One Store, Two Great Locations') and H3s. 4 of 40 images are missing alt text. Heading hierarchy jumps from H2 → H3 with no H1, which hurts SEO crawlability." },
-  { title: "Performance Score: 18 — Critical Page Speed Issues", severity: "Critical", category: "Performance",
-    details: "LIVE DATA: Mobile Lighthouse performance is 18/100. First Contentful Paint: 4.6s (red). Largest Contentful Paint: 15.3s (red). Total Blocking Time: 1,550ms (red). Core Web Vitals assessment: FAILED. CLS of 0.2 (needs improvement)." },
-  { title: "Missing Twitter Card Meta Tags", severity: "Medium", category: "Social",
-    details: "LIVE DATA: No twitter:card meta tag found. Open Graph tags (og:title, og:description, og:image) are present and correct. Adding Twitter Card tags would improve social sharing appearance on X/Twitter." },
+  {
+    title: "Missing H1 Tag & 3 Images Without Alt Text",
+    severity: "Critical",
+    category: "On-Page",
+    details: "LIVE DATA: Homepage has zero H1 tags — only H2: 'One Store, Two Great Locations'. 3 of 6 images are missing alt text."
+  },
+  {
+    title: "Performance Score: 0 — Critical Page Speed Issues",
+    severity: "Critical",
+    category: "Performance",
+    details: "LIVE DATA: Mobile Lighthouse performance is 0/100. FCP: N/A. LCP: N/A. TBT: N/A. Core Web Vitals assessment: FAILED."
+  },
+  {
+    title: "Missing Twitter Card Meta Tags",
+    severity: "Medium",
+    category: "Social",
+    details: "LIVE DATA: No twitter:card meta tag found. Open Graph tags are present and correct. Adding Twitter Card tags would improve social sharing on X/Twitter."
+  },
+  {
+    title: "AI CMO Weekly Priority",
+    severity: "Medium",
+    category: "AI Recommendation",
+    details: "CRITICAL: Add proper H1 tag to homepage immediately. Replace the current header with: <h1>Mark Miller Subaru | New & Used Subaru Dealer Salt Lake City, Utah</h1>. The complete absence of H1 tags is severely impacting search rankings and accessibility scores. This should be implemented within 24 hours as it's the most fundamental on-page SEO element missing."
+  }
 ];
 
 const contentIdeas = [
-  { title: "New Subaru Outback vs. Forester 2026: Which SUV Is Right for Utah Families?", status: "Draft Ready" },
-  { title: "5 Reasons Mark Miller Subaru Is SLC's Top-Rated Dealer for Service", status: "Idea" },
-  { title: "Winter Driving in Utah: How Subaru's Symmetrical AWD Keeps You Safe", status: "Idea" },
+  {
+    title: "Best Subaru Models for Utah Spring Canyon Drives: Outback vs Forester Comparison 2026",
+    status: "Idea"
+  },
+  {
+    title: "Salt Lake City Subaru Service: Pre-Spring Maintenance Checklist for Your WRX or Crosstrek",
+    status: "Idea"
+  },
+  {
+    title: "Why Park City Residents Choose Mark Miller Subaru: Local Customer Stories and Testimonials",
+    status: "Idea"
+  }
 ];
 
 const socialPosts = [
-  { platform: "X", content: "Just helped a family find their perfect 2026 Crosstrek at our Midtown location. Whether you're in South Salt Lake or Sandy, we've got you covered at both Mark Miller Subaru locations. Search inventory → markmillersubaru.com", type: "Suggested Tweet" },
-  { platform: "Reddit", content: "r/SaltLakeCity — Thread: Best Subaru dealers in the valley? (Opportunity to engage authentically about service experience)", type: "Reddit Opportunity" },
-  { platform: "HN", content: "Show HN: Mark Miller Subaru — How a local dealership is using tech to improve the car-buying experience", type: "HN Submission" },
+  {
+    platform: "X",
+    content: "March in Utah = canyon prep time 🏔️ Your Subaru ready for those weekend adventures to Big Cottonwood? Our service team at Mark Miller has you covered. Spring maintenance specials running now! #SubaruLife #SaltLakeCity #UtahAdventure",
+    type: "Suggested Tweet"
+  },
+  {
+    platform: "Reddit",
+    content: "Post in r/SaltLakeCity about spring driving conditions and Subaru AWD performance on local mountain roads, sharing maintenance tips",
+    type: "Reddit Opportunity"
+  },
+  {
+    platform: "LinkedIn",
+    content: "As Utah's outdoor season kicks into gear, we're seeing more families choose the Ascent for their growing adventure needs. There's something special about helping Salt Lake families find the perfect vehicle for their lifestyle. What's your family's next adventure destination?",
+    type: "LinkedIn Post"
+  }
 ];
 
 const terminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: March 16, 2026 5:28 PM",
-  "> Scraped markmillersubaru.com — 40 images, 56 internal links, 323 words",
+  "> Last scan: March 17, 2026 11:36 AM",
+  "> Scraped markmillersubaru.com — 6 images, 70 internal links, 49 words",
   "> - [CRITICAL] No H1 tag on homepage. Only H2: 'One Store, Two Great Locations'",
-  "> - [CRITICAL] Mobile Performance: 18/100 — LCP 15.3s, FCP 4.6s, TBT 1,550ms",
-  "> - [WARNING] 4 images missing alt text out of 40 total",
+  "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
+  "> - [WARNING] 3 images missing alt text out of 6 total",
   "> - [WARNING] No Twitter Card meta tags — OG tags present",
   "> - [PASS] Structured data: AutoDealer schema detected",
   "> - [PASS] Meta title (53 chars), description (122 chars), HTTPS, canonical URL",
-  "> - [PASS] Accessibility: 89 | Best Practices: 96 | SEO: 85",
-  "> 3 issues found. Ready for commands.",
+  "> - [PASS] Accessibility: 0 | Best Practices: 0 | SEO: 0",
+  "> 3 issues found. Ready for commands."
 ];
 
 /* ───────── SUBARU DIGITAL ASSESSMENT SCORECARD ───────── */
