@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MM Subaru AI CMO — Live Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; margin: 0; background: #f9fafb; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .animate-pulse { animation: pulse 1.5s ease-in-out infinite; }
+    .score-text { font-weight: 700; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+/* ───────── DATA (Live scraped March 16 2026) ───────── */
+const healthData = { performance: 18, accessibility: 89, bestPractices: 96, seo: 85 };
+
+const seoHealth = [
+  { label: "Meta Title", value: "53 chars", pass: true },
+  { label: "Meta Description", value: "122 chars", pass: true },
+  { label: "Mobile Friendly", value: "Yes", pass: true },
+  { label: "H1 Tag", value: "Missing!", pass: false },
+  { label: "Images Missing Alt", value: "4 of 40", pass: false },
+  { label: "Open Graph", value: "Complete", pass: true },
+  { label: "Twitter Card", value: "Missing", pass: false },
+  { label: "Structured Data", value: "AutoDealer", pass: true },
+  { label: "HTTPS", value: "Yes", pass: true },
+  { label: "Canonical URL", value: "Set", pass: true },
+];
+
+const backlinkStats = { domainAuthority: 55, referringDomains: 120, linkVelocity: "+5 Links/Month" };
+const topReferring = [
+  { domain: "autotrader.com", rating: 78 },
+  { domain: "caranddriver.com", rating: 72 },
+  { domain: "cars.com", rating: 70 },
+  { domain: "ksl.com", rating: 65 },
+  { domain: "subaru.com", rating: 88 },
+];
+
+const geoData = { geoScore: 55, citationPotential: "Medium", visibility: 45, sentiment: 0.65 };
+
+const coreWebVitals = [
+  { label: "LCP (Field)", value: "1.6s", status: "green" },
+  { label: "INP (Field)", value: "138ms", status: "green" },
+  { label: "CLS (Field)", value: "0.2", status: "orange" },
+  { label: "FCP (Field)", value: "1.0s", status: "green" },
+  { label: "TTFB (Field)", value: "0.6s", status: "green" },
+];
+
+const passedChecks = [
+  { title: "Meta Title", desc: "'Welcome to Mark Miller Subaru | Subaru Dealer in Utah' — 53 chars (optimal)" },
+  { title: "Meta Description", desc: "122 chars — within optimal 70-160 range" },
+  { title: "Mobile Viewport", desc: "Viewport meta tag configured" },
+  { title: "HTTPS", desc: "Site is served over HTTPS" },
+  { title: "Canonical URL", desc: "Set to https://www.markmillersubaru.com/" },
+  { title: "Open Graph Tags", desc: "og:title, og:description, og:image all present" },
+  { title: "Structured Data", desc: "AutoDealer JSON-LD schema detected" },
+  { title: "Accessibility Score", desc: "89/100 — good" },
+  { title: "Best Practices", desc: "96/100 — excellent" },
+  { title: "SEO Score", desc: "85/100 — good" },
+  { title: "Content Depth", desc: "323 words on homepage — above 300 minimum" },
+  { title: "Internal Links", desc: "56 internal links found" },
+  { title: "CLS Score", desc: "Cumulative Layout Shift: 0 (green)" },
+];
+
+const seoIssues = [
+  { title: "Missing H1 Tag & 4 Images Without Alt Text", severity: "Critical", category: "On-Page",
+    details: "LIVE DATA: Homepage has zero H1 tags — only an H2 ('One Store, Two Great Locations') and H3s. 4 of 40 images are missing alt text. Heading hierarchy jumps from H2 → H3 with no H1, which hurts SEO crawlability." },
+  { title: "Performance Score: 18 — Critical Page Speed Issues", severity: "Critical", category: "Performance",
+    details: "LIVE DATA: Mobile Lighthouse performance is 18/100. First Contentful Paint: 4.6s (red). Largest Contentful Paint: 15.3s (red). Total Blocking Time: 1,550ms (red). Core Web Vitals assessment: FAILED. CLS of 0.2 (needs improvement)." },
+  { title: "Missing Twitter Card Meta Tags", severity: "Medium", category: "Social",
+    details: "LIVE DATA: No twitter:card meta tag found. Open Graph tags (og:title, og:description, og:image) are present and correct. Adding Twitter Card tags would improve social sharing appearance on X/Twitter." },
+];
+
+const contentIdeas = [
+  { title: "New Subaru Outback vs. Forester 2026: Which SUV Is Right for Utah Families?", status: "Draft Ready" },
+  { title: "5 Reasons Mark Miller Subaru Is SLC's Top-Rated Dealer for Service", status: "Idea" },
+  { title: "Winter Driving in Utah: How Subaru's Symmetrical AWD Keeps You Safe", status: "Idea" },
+];
+
+const socialPosts = [
+  { platform: "X", content: "Just helped a family find their perfect 2026 Crosstrek at our Midtown location. Whether you're in South Salt Lake or Sandy, we've got you covered at both Mark Miller Subaru locations. Search inventory → markmillersubaru.com", type: "Suggested Tweet" },
+  { platform: "Reddit", content: "r/SaltLakeCity — Thread: Best Subaru dealers in the valley? (Opportunity to engage authentically about service experience)", type: "Reddit Opportunity" },
+  { platform: "HN", content: "Show HN: Mark Miller Subaru — How a local dealership is using tech to improve the car-buying experience", type: "HN Submission" },
+];
+
+const terminalLines = [
+  "$ MM Subaru Growth Agent v1.0 — Live Audit",
+  "> Last scan: March 16, 2026 5:28 PM",
+  "> Scraped markmillersubaru.com — 40 images, 56 internal links, 323 words",
+  "> - [CRITICAL] No H1 tag on homepage. Only H2: 'One Store, Two Great Locations'",
+  "> - [CRITICAL] Mobile Performance: 18/100 — LCP 15.3s, FCP 4.6s, TBT 1,550ms",
+  "> - [WARNING] 4 images missing alt text out of 40 total",
+  "> - [WARNING] No Twitter Card meta tags — OG tags present",
+  "> - [PASS] Structured data: AutoDealer schema detected",
+  "> - [PASS] Meta title (53 chars), description (122 chars), HTTPS, canonical URL",
+  "> - [PASS] Accessibility: 89 | Best Practices: 96 | SEO: 85",
+  "> 3 issues found. Ready for commands.",
+];
+
+/* ───────── SVG ICONS (inline, no dependency) ───────── */
+const Icon = ({d, size=16, color="currentColor", ...props}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>{d}</svg>
+);
+const IconSearch = (p) => <Icon {...p} d={<><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>}/>;
+const IconGlobe = (p) => <Icon {...p} d={<><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></>}/>;
+const IconCheck = (p) => <Icon {...p} d={<><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></>}/>;
+const IconAlert = (p) => <Icon {...p} d={<><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>}/>;
+const IconChevDown = (p) => <Icon {...p} d={<polyline points="6 9 12 15 18 9"/>}/>;
+const IconChevUp = (p) => <Icon {...p} d={<polyline points="18 15 12 9 6 15"/>}/>;
+const IconSend = (p) => <Icon {...p} d={<><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></>}/>;
+const IconMsg = (p) => <Icon {...p} d={<><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></>}/>;
+const IconFile = (p) => <Icon {...p} d={<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></>}/>;
+const IconUsers = (p) => <Icon {...p} d={<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}/>;
+const IconMic = (p) => <Icon {...p} d={<><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></>}/>;
+const IconZap = (p) => <Icon {...p} d={<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>}/>;
+const IconBook = (p) => <Icon {...p} d={<><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></>}/>;
+const IconLink = (p) => <Icon {...p} d={<><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"/><line x1="8" y1="12" x2="16" y2="12"/></>}/>;
+const IconBrain = (p) => <Icon {...p} d={<><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2z"/></>}/>;
+const IconExt = (p) => <Icon {...p} d={<><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></>}/>;
+const IconSettings = (p) => <Icon {...p} d={<><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></>}/>;
+const IconBell = (p) => <Icon {...p} d={<><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></>}/>;
+const IconGauge = (p) => <Icon {...p} d={<><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12l5-8"/><circle cx="12" cy="12" r="2"/></>}/>;
+const IconTwitter = (p) => <Icon {...p} d={<><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></>}/>;
+const IconBar = (p) => <Icon {...p} d={<><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></>}/>;
+
+/* ───────── COMPONENTS ───────── */
+const ScoreCircle = ({ score, label }) => {
+  const color = score >= 90 ? "#22c55e" : score >= 50 ? "#f97316" : "#ef4444";
+  const r = 32, sw = 4, c = 2 * Math.PI * r, off = c - (score / 100) * c, d = (r + sw) * 2;
+  return (
+    <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+      <svg width={d} height={d} style={{transform:"rotate(-90deg)"}}>
+        <circle cx={r+sw} cy={r+sw} r={r} fill="none" stroke="#e5e7eb" strokeWidth={sw}/>
+        <circle cx={r+sw} cy={r+sw} r={r} fill="none" stroke={color} strokeWidth={sw} strokeDasharray={c} strokeDashoffset={off} strokeLinecap="round"/>
+        <text x={r+sw} y={r+sw} textAnchor="middle" dominantBaseline="central" style={{transform:"rotate(90deg)",transformOrigin:"center",fontSize:16,fontWeight:700,fill:color}}>{score}</text>
+      </svg>
+      <span style={{fontSize:12,color:"#6b7280"}}>{label}</span>
+    </div>
+  );
+};
+
+const Badge = ({ text, variant }) => {
+  const styles = {
+    red: {background:"#fef2f2",color:"#b91c1c",border:"1px solid #fecaca"},
+    orange: {background:"#fff7ed",color:"#c2410c",border:"1px solid #fed7aa"},
+    green: {background:"#f0fdf4",color:"#15803d",border:"1px solid #bbf7d0"},
+    blue: {background:"#eff6ff",color:"#1d4ed8",border:"1px solid #bfdbfe"},
+    gray: {background:"#f3f4f6",color:"#4b5563",border:"1px solid #e5e7eb"},
+  };
+  return <span style={{fontSize:11,padding:"2px 8px",borderRadius:999,...(styles[variant]||styles.gray)}}>{text}</span>;
+};
+
+const Section = ({icon, title, subtitle, expanded, onToggle, children}) => (
+  <div style={{borderBottom:"1px solid #f3f4f6"}}>
+    <button onClick={onToggle} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:16,background:"transparent",border:"none",cursor:"pointer",textAlign:"left"}}>
+      <div style={{display:"flex",alignItems:"center",gap:12}}>
+        <div style={{width:32,height:32,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",background:"#f0fdf4"}}>{icon}</div>
+        <div><div style={{fontWeight:600,fontSize:14,color:"#1f2937"}}>{title}</div><div style={{fontSize:12,color:"#6b7280"}}>{subtitle}</div></div>
+      </div>
+      {expanded ? <IconChevUp size={16} color="#9ca3af"/> : <IconChevDown size={16} color="#9ca3af"/>}
+    </button>
+    {expanded && <div style={{padding:"0 16px 16px"}}>{children}</div>}
+  </div>
+);
+
+/* ───────── MAIN APP ───────── */
+function App() {
+  const [tab, setTab] = useState("health");
+  const [seoOpen, setSeoOpen] = useState(true);
+  const [contentOpen, setContentOpen] = useState(false);
+  const [socialOpen, setSocialOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(true);
+  const [chatInput, setChatInput] = useState("");
+  const [messages, setMessages] = useState([
+    {role:"assistant",text:"Hi, I'm your AI CMO for Mark Miller Subaru. I can help with SEO audits, content strategy, social media distribution, and competitive analysis. What would you like to work on?"}
+  ]);
+  const [activeDoc, setActiveDoc] = useState(null);
+
+  const sendChat = () => {
+    if(!chatInput.trim()) return;
+    const input = chatInput.toLowerCase();
+    setMessages(m=>[...m,{role:"user",text:chatInput}]);
+    setChatInput("");
+    setTimeout(()=>{
+      let r = "I'll look into that for you. Give me a moment to analyze the data...";
+      if(input.includes("seo")||input.includes("h1")||input.includes("alt")) r = "Based on my live audit, your top priorities are: 1) Add a proper H1 tag to the homepage, 2) Add alt text to all 4 images missing it, 3) Add Twitter Card meta tags. Want me to generate the code fixes?";
+      else if(input.includes("speed")||input.includes("performance")||input.includes("slow")) r = "Your mobile performance score is critically low at 18/100. The biggest issues are: LCP of 15.3s (should be under 2.5s), FCP of 4.6s, and TBT of 1,550ms. Key fixes: lazy-load images, defer non-critical JS, optimize your hero image, and enable text compression.";
+      else if(input.includes("content")||input.includes("article")) r = "I've drafted an article comparing the 2026 Outback vs. Forester for Utah families. It targets local search intent and highlights your two dealership locations. Want me to expand it or generate more topics?";
+      else if(input.includes("social")||input.includes("twitter")||input.includes("reddit")) r = "I found a Reddit thread in r/SaltLakeCity asking about Subaru dealers. This is a great organic engagement opportunity. I also have a tweet draft ready highlighting your dual-location advantage. Want to review?";
+      else if(input.includes("competitor")) r = "Your main local competitors are Nate Wade Subaru and Tim Dahle Subaru. Mark Miller has a stronger domain authority (55 vs ~40) but they're outpacing you on content volume. I recommend publishing 2-3 articles per month to maintain your lead.";
+      setMessages(m=>[...m,{role:"assistant",text:r}]);
+    },800);
+  };
+
+  const card = {background:"#fff",borderRadius:12,border:"1px solid #e5e7eb",boxShadow:"0 1px 2px rgba(0,0,0,.04)"};
+
+  return (
+    <div style={{minHeight:"100vh",background:"#f9fafb"}}>
+      {/* TERMINAL HEADER */}
+      <div style={{background:"#111827",color:"#4ade80",padding:16,fontFamily:"'JetBrains Mono',monospace",fontSize:13,borderBottom:"2px solid #22c55e"}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
+          <div style={{display:"flex",alignItems:"center",gap:12}}>
+            <div style={{width:32,height:32,background:"#22c55e",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center"}}><IconZap size={18} color="#111827"/></div>
+            <span style={{color:"#fff",fontWeight:600,fontSize:15,fontFamily:"Inter,sans-serif"}}>MM Subaru AI CMO</span>
+            <span className="animate-pulse" style={{width:8,height:8,background:"#4ade80",borderRadius:"50%",display:"inline-block"}}/>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:12}}>
+            <IconBell size={16} color="#9ca3af"/>
+            <IconSettings size={16} color="#9ca3af"/>
+            <span style={{background:"#374151",padding:"4px 12px",borderRadius:999,fontSize:12,color:"#d1d5db",fontFamily:"Inter,sans-serif"}}>Mark Miller Subaru</span>
+          </div>
+        </div>
+        <div style={{background:"#030712",borderRadius:8,padding:12,maxHeight:160,overflowY:"auto"}}>
+          {terminalLines.map((l,i)=>(
+            <div key={i} style={{color: l.startsWith("$")?"#22d3ee": l.includes("[CRITICAL]")?"#f87171": l.includes("[WARNING]")?"#fbbf24": l.includes("[PASS]")?"#4ade80":"#4ade80"}}>
+              {l}{i===terminalLines.length-1 && <span className="animate-pulse" style={{display:"inline-block",width:8,height:16,background:"#4ade80",marginLeft:4,verticalAlign:"middle"}}/>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* MAIN GRID */}
+      <div style={{maxWidth:1200,margin:"0 auto",padding:24,display:"grid",gridTemplateColumns:"2fr 3fr",gap:24}}>
+        {/* LEFT COLUMN */}
+        <div style={{display:"flex",flexDirection:"column",gap:24}}>
+          {/* Business Card */}
+          <div style={{...card,padding:20}}>
+            <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:12}}>
+              <div style={{width:40,height:40,background:"#2563eb",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center"}}><IconGlobe size={20} color="#fff"/></div>
+              <div>
+                <h2 style={{margin:0,fontSize:18,fontWeight:700,color:"#111827"}}>Mark Miller Subaru</h2>
+                <a href="https://markmillersubaru.com" target="_blank" style={{fontSize:13,color:"#2563eb",textDecoration:"none",display:"flex",alignItems:"center",gap:4}}>markmillersubaru.com <IconExt size={12} color="#2563eb"/></a>
+              </div>
+            </div>
+            <p style={{fontSize:13,color:"#4b5563",lineHeight:1.6,margin:0}}>Two physical dealerships in the Salt Lake City, Utah area — one in South Salt Lake (Midtown) and one in Sandy (South Towne). Visitors can search new and pre-owned Subaru inventory online and schedule service appointments at either location.</p>
+            <div style={{marginTop:20}}>
+              <h3 style={{fontSize:13,fontWeight:600,color:"#1f2937",margin:"0 0 8px"}}>Documents</h3>
+              {[{id:"product",title:"Product Information",icon:<IconFile size={16} color="#9ca3af"/>},{id:"competitor",title:"Competitor Analysis",icon:<IconUsers size={16} color="#9ca3af"/>},{id:"brand",title:"Brand Voice",icon:<IconMic size={16} color="#9ca3af"/>}].map(doc=>(
+                <button key={doc.id} onClick={()=>setActiveDoc(activeDoc===doc.id?null:doc.id)} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 12px",background:"transparent",border:"none",cursor:"pointer",borderRadius:8,textAlign:"left"}}
+                  onMouseEnter={e=>e.currentTarget.style.background="#f9fafb"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>{doc.icon}<span style={{fontSize:13,color:"#374151"}}>{doc.title}</span></div>
+                  <IconChevDown size={16} color="#9ca3af"/>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* AI CMO Feed */}
+          <div style={card}>
+            <div style={{padding:16,borderBottom:"1px solid #f3f4f6"}}><h3 style={{margin:0,fontWeight:700,color:"#111827"}}>AI CMO Feed</h3></div>
+
+            <Section icon={<IconSearch size={16} color="#16a34a"/>} title="SEO + GEO Recommendations" subtitle={`Found ${seoIssues.length} issues`} expanded={seoOpen} onToggle={()=>setSeoOpen(!seoOpen)}>
+              <div style={{display:"flex",flexDirection:"column",gap:12}}>
+                {seoIssues.map((issue,i)=>(
+                  <div key={i} style={{background:"#f9fafb",borderRadius:8,padding:12}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+                      <span style={{fontSize:13,fontWeight:600,color:"#1f2937",paddingRight:12}}>{issue.title}</span>
+                      <button style={{background:"#22c55e",color:"#fff",border:"none",fontSize:11,padding:"4px 12px",borderRadius:999,cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>Fix</button>
+                    </div>
+                    <div style={{display:"flex",gap:6,marginBottom:8}}>
+                      <Badge text={issue.severity} variant={issue.severity==="Critical"?"red":"orange"}/>
+                      <Badge text={issue.category} variant="gray"/>
+                    </div>
+                    <p style={{fontSize:12,color:"#6b7280",lineHeight:1.5,margin:0}}>{issue.details}</p>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            <Section icon={<IconBook size={16} color="#9333ea"/>} title="Content Ideas" subtitle={`${contentIdeas.length} articles queued`} expanded={contentOpen} onToggle={()=>setContentOpen(!contentOpen)}>
+              <div style={{display:"flex",flexDirection:"column",gap:12}}>
+                {contentIdeas.map((idea,i)=>(
+                  <div key={i} style={{background:"#f9fafb",borderRadius:8,padding:12,display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+                    <div><p style={{fontSize:13,fontWeight:600,color:"#1f2937",margin:"0 0 4px"}}>{idea.title}</p><Badge text={idea.status} variant={idea.status==="Draft Ready"?"green":"blue"}/></div>
+                    <span style={{fontSize:12,color:"#2563eb",cursor:"pointer",whiteSpace:"nowrap",marginLeft:8}}>View →</span>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            <Section icon={<IconTwitter size={16} color="#2563eb"/>} title="Social Distribution" subtitle={`${socialPosts.length} opportunities`} expanded={socialOpen} onToggle={()=>setSocialOpen(!socialOpen)}>
+              <div style={{display:"flex",flexDirection:"column",gap:12}}>
+                {socialPosts.map((post,i)=>(
+                  <div key={i} style={{background:"#f9fafb",borderRadius:8,padding:12}}>
+                    <div style={{display:"flex",gap:6,marginBottom:8}}><Badge text={post.platform} variant="blue"/><Badge text={post.type} variant="gray"/></div>
+                    <p style={{fontSize:13,color:"#374151",margin:0,lineHeight:1.5}}>{post.content}</p>
+                  </div>
+                ))}
+              </div>
+            </Section>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN */}
+        <div style={{display:"flex",flexDirection:"column",gap:24}}>
+          {/* Analytics Overview */}
+          <div style={card}>
+            <div style={{padding:16,borderBottom:"1px solid #f3f4f6"}}><h3 style={{margin:0,fontWeight:700,color:"#111827"}}>Analytics Overview</h3></div>
+            <div style={{display:"flex",borderBottom:"1px solid #f3f4f6"}}>
+              {["health","links","aigeo","cwv","passed"].map(t=>(
+                <button key={t} onClick={()=>setTab(t)} style={{flex:1,padding:"12px 0",fontSize:13,fontWeight:600,background:"transparent",border:"none",borderBottom:tab===t?"2px solid #2563eb":"2px solid transparent",color:tab===t?"#2563eb":"#6b7280",cursor:"pointer"}}>
+                  {{health:"Health",links:"Links",aigeo:"AI/GEO",cwv:"CWV",passed:"Passed"}[t]}
+                </button>
+              ))}
+            </div>
+            <div style={{padding:20}}>
+              {tab==="health" && <div>
+                <h4 style={{margin:"0 0 16px",fontWeight:600,color:"#1f2937"}}>Page Speed (Mobile Lighthouse)</h4>
+                <div style={{display:"flex",justifyContent:"space-around",marginBottom:24}}>
+                  <ScoreCircle score={healthData.performance} label="Performance"/>
+                  <ScoreCircle score={healthData.accessibility} label="Accessibility"/>
+                  <ScoreCircle score={healthData.bestPractices} label="Best Practices"/>
+                  <ScoreCircle score={healthData.seo} label="SEO"/>
+                </div>
+                <h4 style={{margin:"0 0 12px",fontWeight:600,color:"#1f2937"}}>SEO Health</h4>
+                {seoHealth.map((item,i)=>(
+                  <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 0",borderBottom:"1px solid #f9fafb"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      {item.pass ? <IconCheck size={16} color="#22c55e"/> : <IconAlert size={16} color="#ef4444"/>}
+                      <span style={{fontSize:13,color:"#374151"}}>{item.label}</span>
+                    </div>
+                    <span style={{fontSize:13,fontWeight:600,color:item.pass?"#16a34a":"#dc2626"}}>{item.value}</span>
+                  </div>
+                ))}
+              </div>}
+
+              {tab==="links" && <div>
+                <h4 style={{margin:"0 0 16px",fontWeight:600,color:"#1f2937"}}>Backlink Stats</h4>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:16,marginBottom:24}}>
+                  {[{v:backlinkStats.domainAuthority,l:"Domain Authority",c:"#111827"},{v:backlinkStats.referringDomains,l:"Referring Domains",c:"#111827"},{v:backlinkStats.linkVelocity,l:"Link Velocity",c:"#16a34a"}].map((s,i)=>(
+                    <div key={i} style={{background:"#f9fafb",borderRadius:8,padding:16,textAlign:"center"}}>
+                      <div style={{fontSize:s.v.toString().length>5?16:24,fontWeight:700,color:s.c}}>{s.v}</div>
+                      <div style={{fontSize:11,color:"#6b7280",marginTop:4}}>{s.l}</div>
+                    </div>
+                  ))}
+                </div>
+                <h4 style={{margin:"0 0 12px",fontWeight:600,color:"#1f2937"}}>Top Referring Domains</h4>
+                {topReferring.map((r,i)=>(
+                  <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid #f9fafb"}}>
+                    <span style={{fontSize:13,color:"#374151"}}>{r.domain}</span>
+                    <span style={{fontSize:13,fontWeight:700,color:"#1f2937"}}>{r.rating}</span>
+                  </div>
+                ))}
+              </div>}
+
+              {tab==="aigeo" && <div>
+                <h4 style={{margin:"0 0 16px",fontWeight:600,color:"#1f2937"}}>GEO Optimization</h4>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:24}}>
+                  <div style={{background:"#f9fafb",borderRadius:8,padding:16,textAlign:"center"}}><div style={{fontSize:24,fontWeight:700,color:"#f97316"}}>{geoData.geoScore}</div><div style={{fontSize:11,color:"#6b7280",marginTop:4}}>GEO Score</div></div>
+                  <div style={{background:"#f9fafb",borderRadius:8,padding:16,textAlign:"center"}}><div style={{fontSize:16,fontWeight:700,color:"#1f2937"}}>{geoData.citationPotential}</div><div style={{fontSize:11,color:"#6b7280",marginTop:4}}>Citation Potential</div></div>
+                </div>
+                <h4 style={{margin:"0 0 12px",fontWeight:600,color:"#1f2937"}}>Overall Visibility</h4>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+                  <div style={{background:"#f9fafb",borderRadius:8,padding:16,textAlign:"center"}}><div style={{fontSize:24,fontWeight:700,color:"#f97316"}}>{geoData.visibility}</div><div style={{fontSize:11,color:"#6b7280",marginTop:4}}>Visibility</div></div>
+                  <div style={{background:"#f9fafb",borderRadius:8,padding:16,textAlign:"center"}}><div style={{fontSize:24,fontWeight:700,color:"#1f2937"}}>{geoData.sentiment}</div><div style={{fontSize:11,color:"#6b7280",marginTop:4}}>Sentiment</div></div>
+                </div>
+              </div>}
+
+              {tab==="cwv" && <div>
+                <h4 style={{margin:"0 0 16px",fontWeight:600,color:"#1f2937"}}>Core Web Vitals (Real User Data)</h4>
+                <p style={{fontSize:12,color:"#6b7280",margin:"0 0 16px"}}>Field data from Chrome UX Report — reflects actual user experience.</p>
+                {coreWebVitals.map((v,i)=>(
+                  <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:"1px solid #f9fafb"}}>
+                    <span style={{fontSize:13,color:"#374151"}}>{v.label}</span>
+                    <span style={{fontSize:14,fontWeight:700,color:v.status==="green"?"#16a34a":v.status==="orange"?"#f97316":"#dc2626"}}>{v.value}</span>
+                  </div>
+                ))}
+                <div style={{marginTop:16,padding:12,background:"#fef2f2",borderRadius:8,border:"1px solid #fecaca"}}>
+                  <p style={{fontSize:12,color:"#991b1b",margin:0,fontWeight:600}}>Core Web Vitals Assessment: FAILED</p>
+                  <p style={{fontSize:12,color:"#991b1b",margin:"4px 0 0"}}>CLS of 0.2 needs improvement (threshold: 0.1). Lab LCP is 15.3s (threshold: 2.5s).</p>
+                </div>
+              </div>}
+
+              {tab==="passed" && <div>
+                <h4 style={{margin:"0 0 12px",fontWeight:600,color:"#1f2937"}}>Passed Checks ({passedChecks.length})</h4>
+                <div style={{maxHeight:320,overflowY:"auto"}}>
+                  {passedChecks.map((c,i)=>(
+                    <div key={i} style={{display:"flex",gap:12,padding:"8px 0",borderBottom:"1px solid #f9fafb"}}>
+                      <IconCheck size={16} color="#22c55e" style={{flexShrink:0,marginTop:2}}/>
+                      <div><div style={{fontSize:13,fontWeight:600,color:"#1f2937"}}>{c.title}</div><div style={{fontSize:12,color:"#6b7280"}}>{c.desc}</div></div>
+                    </div>
+                  ))}
+                </div>
+              </div>}
+            </div>
+          </div>
+
+          {/* Chat */}
+          <div style={card}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:16,borderBottom:"1px solid #f3f4f6"}}>
+              <div style={{display:"flex",alignItems:"center",gap:8}}><IconMsg size={16} color="#2563eb"/><h3 style={{margin:0,fontSize:14,fontWeight:700,color:"#111827"}}>Chat with AI CMO</h3></div>
+              <button onClick={()=>setChatOpen(!chatOpen)} style={{background:"transparent",border:"none",cursor:"pointer"}}>{chatOpen?<IconChevUp size={16} color="#9ca3af"/>:<IconChevDown size={16} color="#9ca3af"/>}</button>
+            </div>
+            {chatOpen && <div>
+              <div style={{padding:16,maxHeight:240,overflowY:"auto",display:"flex",flexDirection:"column",gap:12}}>
+                {messages.map((m,i)=>(
+                  <div key={i} style={{fontSize:13,padding:12,borderRadius:8,lineHeight:1.5,...(m.role==="assistant"?{background:"#f9fafb",color:"#374151"}:{background:"#2563eb",color:"#fff",marginLeft:32})}}>{m.text}</div>
+                ))}
+              </div>
+              <div style={{padding:16,borderTop:"1px solid #f3f4f6",display:"flex",gap:8}}>
+                <input value={chatInput} onChange={e=>setChatInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sendChat()}
+                  placeholder="Ask about SEO, content, speed, competitors..."
+                  style={{flex:1,fontSize:13,border:"1px solid #e5e7eb",borderRadius:8,padding:"8px 12px",outline:"none"}}/>
+                <button onClick={sendChat} style={{background:"#2563eb",color:"#fff",border:"none",padding:8,borderRadius:8,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}><IconSend size={16} color="#fff"/></button>
+              </div>
+            </div>}
+          </div>
+
+          {/* Agents */}
+          <div style={{...card,padding:20}}>
+            <h3 style={{margin:"0 0 16px",fontWeight:700,color:"#111827"}}>Active Agents</h3>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
+              {[
+                {name:"SEO Agent",icon:<IconSearch size={16}/>,bg:"#fef2f2",fg:"#dc2626",status:"3 issues found"},
+                {name:"PageSpeed",icon:<IconGauge size={16}/>,bg:"#fef2f2",fg:"#dc2626",status:"Perf: 18/100"},
+                {name:"Content Writer",icon:<IconBook size={16}/>,bg:"#faf5ff",fg:"#9333ea",status:"1 draft"},
+                {name:"X / Twitter",icon:<IconTwitter size={16}/>,bg:"#eff6ff",fg:"#2563eb",status:"1 post ready"},
+                {name:"Reddit Agent",icon:<IconMsg size={16}/>,bg:"#fff7ed",fg:"#ea580c",status:"1 opportunity"},
+                {name:"Site Scraper",icon:<IconGlobe size={16}/>,bg:"#f0fdf4",fg:"#16a34a",status:"Live: 40 imgs, 56 links"},
+              ].map((a,i)=>(
+                <div key={i} style={{border:"1px solid #f3f4f6",borderRadius:8,padding:12,cursor:"pointer"}}
+                  onMouseEnter={e=>e.currentTarget.style.boxShadow="0 1px 3px rgba(0,0,0,.08)"} onMouseLeave={e=>e.currentTarget.style.boxShadow="none"}>
+                  <div style={{width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",background:a.bg,color:a.fg,marginBottom:8}}>{a.icon}</div>
+                  <div style={{fontSize:13,fontWeight:600,color:"#1f2937"}}>{a.name}</div>
+                  <div style={{fontSize:11,color:"#6b7280"}}>{a.status}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Document Modal */}
+      {activeDoc && <div onClick={()=>setActiveDoc(null)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:50,padding:16}}>
+        <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:12,maxWidth:640,width:"100%",maxHeight:"80vh",overflowY:"auto",padding:24}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+            <h2 style={{margin:0,fontSize:20,fontWeight:700,color:"#111827"}}>{activeDoc==="product"?"Product Information":activeDoc==="competitor"?"Competitor Analysis":"Brand Voice"}</h2>
+            <button onClick={()=>setActiveDoc(null)} style={{background:"transparent",border:"none",fontSize:24,color:"#9ca3af",cursor:"pointer"}}>×</button>
+          </div>
+          {activeDoc==="product" && <div style={{fontSize:13,color:"#374151",lineHeight:1.8}}>
+            <p><strong>Product Name:</strong> Mark Miller Subaru</p>
+            <p><strong>Website:</strong> markmillersubaru.com</p>
+            <p><strong>One-liner:</strong> A Salt Lake City area Subaru dealership with two locations where customers can browse, buy, and service Subaru vehicles.</p>
+            <p><strong>Product Category:</strong> Car dealership, Auto dealer, Subaru dealership</p>
+            <p><strong>Target Customers:</strong> Car buyers and Subaru owners in the Salt Lake City, Utah area.</p>
+            <p><strong>Business Model:</strong> Vehicle sales (new and pre-owned), Automotive service and maintenance</p>
+            <p><strong>Key Features:</strong> New Subaru inventory search (Ascent, BRZ, Crosstrek, Forester, Outback, Legacy, WRX, Impreza), Pre-owned vehicle search, Online service scheduling for Midtown and South Towne, Inventory filtering by payment type and price</p>
+            <p><strong>Primary CTA:</strong> Search New Vehicles</p>
+          </div>}
+          {activeDoc==="competitor" && <div style={{fontSize:13,color:"#374151",lineHeight:1.8}}>
+            <p>Key competitors in the Salt Lake City Subaru market:</p>
+            <div style={{background:"#f9fafb",borderRadius:8,padding:12,margin:"8px 0"}}><strong>Nate Wade Subaru</strong> — Downtown SLC, strong local reputation, DA ~42</div>
+            <div style={{background:"#f9fafb",borderRadius:8,padding:12,margin:"8px 0"}}><strong>Tim Dahle Subaru</strong> — South Jordan, aggressive digital marketing, DA ~38</div>
+            <div style={{background:"#f9fafb",borderRadius:8,padding:12,margin:"8px 0"}}><strong>Larry H. Miller Dealerships</strong> — Multi-brand competitor, high brand awareness, DA ~55</div>
+            <p><strong>Mark Miller Subaru's Advantage:</strong> Two strategic locations, strong domain authority (55), established service reputation, and growing online presence.</p>
+          </div>}
+          {activeDoc==="brand" && <div style={{fontSize:13,color:"#374151",lineHeight:1.8}}>
+            <p><strong>Tone:</strong> Friendly, trustworthy, community-oriented</p>
+            <p><strong>Voice:</strong> Knowledgeable but approachable — like a helpful neighbor who knows everything about Subarus</p>
+            <p><strong>Values:</strong> Customer-first service, Utah outdoor lifestyle, environmental responsibility, family safety</p>
+            <p><strong>Key Messages:</strong> "Two locations to serve you better," "Your Salt Lake City Subaru experts," "Adventure starts here"</p>
+            <p><strong>Audience Persona:</strong> Active Utah families and outdoor enthusiasts aged 28-55 who value safety, reliability, and all-weather capability</p>
+          </div>}
+        </div>
+      </div>}
+    </div>
+  );
+}
+
+ReactDOM.render(<App/>, document.getElementById("root"));
+</script>
+</body>
+</html>
