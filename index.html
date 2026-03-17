@@ -182,21 +182,21 @@ const seoIssues = [
     title: "AI CMO Weekly Priority",
     severity: "Medium",
     category: "AI Recommendation",
-    details: "Critical Priority: Add proper H1 tag to homepage immediately. Replace the missing H1 with '<h1>Salt Lake City Subaru Dealer | New & Used Cars | Mark Miller Subaru</h1>' positioned prominently above the fold. This addresses the 0 H1 tags found and improves local SEO structure for Utah searches."
+    details: "Immediately add a proper H1 tag to the homepage. The current page has zero H1 tags which is a critical SEO issue. Add <h1>Salt Lake City Subaru Dealer | Mark Miller Subaru Midtown & South Towne</h1> as the main headline, replacing or wrapping the current primary heading. This will provide essential page structure and improve search engine understanding of your primary focus."
   }
 ];
 
 const contentIdeas = [
   {
-    title: "Best Subaru Models for Utah's Spring Trail Season: Outback vs Forester vs Crosstrek Comparison",
+    title: "Best Subaru Models for Utah Spring Hiking Season: Outback vs Forester vs Crosstrek Comparison",
     status: "Idea"
   },
   {
-    title: "Salt Lake City Subaru Service: Where to Get Your Pre-Summer Road Trip Inspection in 2026",
+    title: "2026 Subaru Ascent Review: Perfect Family SUV for Salt Lake City School Commutes",
     status: "Idea"
   },
   {
-    title: "New 2026 Subaru Ascent Review: Perfect Family SUV for Utah's Growing Families",
+    title: "Utah Road Trip Guide: Taking Your Subaru WRX Through Scenic Byway 12 This Spring",
     status: "Idea"
   }
 ];
@@ -204,24 +204,24 @@ const contentIdeas = [
 const socialPosts = [
   {
     platform: "X",
-    content: "Spring is coming to the Wasatch! Time to prep your Subaru for those weekend adventures. Our service team at both Midtown and South Towne locations can get you trail-ready. #SubaruUtah #WasatchMountains",
+    content: "Spring break planning in SLC? Your Subaru Outback is ready for those weekend trips to Moab. All-wheel drive + ground clearance = adventure ready. Both our Midtown & South Towne locations have 2026s in stock! #SubaruUtah #SpringAdventure",
     type: "Suggested Tweet"
   },
   {
     platform: "Reddit",
-    content: "r/SaltLakeCity - Share photos of Subarus spotted at popular trailheads like Millcreek Canyon or Big Cottonwood, engage with outdoor enthusiasts discussing AWD benefits",
+    content: "r/SaltLakeCity - Share experience about which Subaru models handle the Sugar House to Big Cottonwood Canyon drive best in spring conditions",
     type: "Reddit Opportunity"
   },
   {
     platform: "LinkedIn",
-    content: "Proud to serve Utah families for over a decade. Our two Salt Lake locations continue to provide exceptional Subaru sales and service to communities from Sugar House to Draper.",
+    content: "As Utah's outdoor season kicks off, we're seeing increased demand for all-wheel drive vehicles. At Mark Miller Subaru, our March inventory reflects what Utahns need: capability, reliability, and adventure-ready features across our Outback and Forester lineups.",
     type: "LinkedIn Post"
   }
 ];
 
 const terminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: March 17, 2026 11:39 AM",
+  "> Last scan: March 17, 2026 3:25 PM",
   "> Scraped markmillersubaru.com — 6 images, 70 internal links, 49 words",
   "> - [CRITICAL] No H1 tag on homepage. Only H2: 'One Store, Two Great Locations'",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
@@ -234,20 +234,310 @@ const terminalLines = [
 ];
 
 /* ───────── MIDTOWN DATA ───────── */
-const midtownHealthData = {performance:0, accessibility:0, bestPractices:0, seo:0};
-const midtownSeoHealth = [];
-const midtownCoreWebVitals = [];
-const midtownSeoIssues = [];
-const midtownPassedChecks = [];
-const midtownTerminalLines = ["$ Midtown audit data loading..."];
+const midtownHealthData = {
+  performance: 0,
+  accessibility: 0,
+  bestPractices: 0,
+  seo: 0
+};
+const midtownSeoHealth = [
+  {
+    label: "Meta Title",
+    value: "90 chars",
+    pass: false
+  },
+  {
+    label: "Meta Description",
+    value: "205 chars",
+    pass: false
+  },
+  {
+    label: "Mobile Friendly",
+    value: "Yes",
+    pass: true
+  },
+  {
+    label: "H1 Tag",
+    value: "1 found",
+    pass: true
+  },
+  {
+    label: "Images Missing Alt",
+    value: "2 of 18",
+    pass: false
+  },
+  {
+    label: "Open Graph",
+    value: "Complete",
+    pass: true
+  },
+  {
+    label: "Twitter Card",
+    value: "Missing",
+    pass: false
+  },
+  {
+    label: "Structured Data",
+    value: "Offer",
+    pass: true
+  },
+  {
+    label: "HTTPS",
+    value: "Yes",
+    pass: true
+  },
+  {
+    label: "Canonical URL",
+    value: "Set",
+    pass: true
+  }
+];
+const midtownCoreWebVitals = [
+  {
+    label: "LCP (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "INP (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "CLS (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "FCP (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "TTFB (Field)",
+    value: "N/A",
+    status: "gray"
+  }
+];
+const midtownSeoIssues = [
+  {
+    title: "2 Images Without Alt Text",
+    severity: "Critical",
+    category: "On-Page",
+    details: "LIVE DATA: 2 of 18 images are missing alt text."
+  },
+  {
+    title: "Performance Score: 0 — Critical Page Speed Issues",
+    severity: "Critical",
+    category: "Performance",
+    details: "LIVE DATA: Mobile Lighthouse performance is 0/100. FCP: N/A. LCP: N/A. TBT: N/A. Core Web Vitals assessment: FAILED."
+  },
+  {
+    title: "Missing Twitter Card Meta Tags",
+    severity: "Medium",
+    category: "Social",
+    details: "LIVE DATA: No twitter:card meta tag found. Open Graph tags are present and correct. Adding Twitter Card tags would improve social sharing on X/Twitter."
+  }
+];
+const midtownPassedChecks = [
+  {
+    title: "Mobile Viewport",
+    desc: "Viewport meta tag configured"
+  },
+  {
+    title: "HTTPS",
+    desc: "Site is served over HTTPS"
+  },
+  {
+    title: "Canonical URL",
+    desc: "Set to https://www.markmillersubarumidtown.com"
+  },
+  {
+    title: "Open Graph Tags",
+    desc: "og:title, og:description, og:image all present"
+  },
+  {
+    title: "Structured Data",
+    desc: "Offer JSON-LD schema detected"
+  },
+  {
+    title: "Content Depth",
+    desc: "955 words on homepage — above 300 minimum"
+  },
+  {
+    title: "Internal Links",
+    desc: "134 internal links found"
+  }
+];
+const midtownTerminalLines = [
+  "$ MM Subaru Growth Agent v1.0 — Live Audit",
+  "> Last scan: March 17, 2026 3:25 PM",
+  "> Scraped markmillersubarumidtown.com — 18 images, 134 internal links, 955 words",
+  "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
+  "> - [WARNING] 2 images missing alt text out of 18 total",
+  "> - [WARNING] No Twitter Card meta tags — OG tags present",
+  "> - [PASS] Structured data: Offer schema detected",
+  "> - [PASS] Meta title (90 chars), description (205 chars), HTTPS, canonical URL",
+  "> - [PASS] Accessibility: 0 | Best Practices: 0 | SEO: 0",
+  "> 3 issues found. Ready for commands."
+];
 
 /* ───────── SOUTH TOWNE DATA ───────── */
-const southtowneHealthData = {performance:0, accessibility:0, bestPractices:0, seo:0};
-const southtowneSeoHealth = [];
-const southtowneCoreWebVitals = [];
-const southtowneSeoIssues = [];
-const southtownePassedChecks = [];
-const southtowneTerminalLines = ["$ South Towne audit data loading..."];
+const southtowneHealthData = {
+  performance: 0,
+  accessibility: 0,
+  bestPractices: 0,
+  seo: 0
+};
+const southtowneSeoHealth = [
+  {
+    label: "Meta Title",
+    value: "59 chars",
+    pass: true
+  },
+  {
+    label: "Meta Description",
+    value: "156 chars",
+    pass: true
+  },
+  {
+    label: "Mobile Friendly",
+    value: "Yes",
+    pass: true
+  },
+  {
+    label: "H1 Tag",
+    value: "1 found",
+    pass: true
+  },
+  {
+    label: "Images Missing Alt",
+    value: "2 of 18",
+    pass: false
+  },
+  {
+    label: "Open Graph",
+    value: "Complete",
+    pass: true
+  },
+  {
+    label: "Twitter Card",
+    value: "Missing",
+    pass: false
+  },
+  {
+    label: "Structured Data",
+    value: "Offer",
+    pass: true
+  },
+  {
+    label: "HTTPS",
+    value: "Yes",
+    pass: true
+  },
+  {
+    label: "Canonical URL",
+    value: "Set",
+    pass: true
+  }
+];
+const southtowneCoreWebVitals = [
+  {
+    label: "LCP (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "INP (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "CLS (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "FCP (Field)",
+    value: "N/A",
+    status: "gray"
+  },
+  {
+    label: "TTFB (Field)",
+    value: "N/A",
+    status: "gray"
+  }
+];
+const southtowneSeoIssues = [
+  {
+    title: "2 Images Without Alt Text",
+    severity: "Critical",
+    category: "On-Page",
+    details: "LIVE DATA: 2 of 18 images are missing alt text."
+  },
+  {
+    title: "Performance Score: 0 — Critical Page Speed Issues",
+    severity: "Critical",
+    category: "Performance",
+    details: "LIVE DATA: Mobile Lighthouse performance is 0/100. FCP: N/A. LCP: N/A. TBT: N/A. Core Web Vitals assessment: FAILED."
+  },
+  {
+    title: "Missing Twitter Card Meta Tags",
+    severity: "Medium",
+    category: "Social",
+    details: "LIVE DATA: No twitter:card meta tag found. Open Graph tags are present and correct. Adding Twitter Card tags would improve social sharing on X/Twitter."
+  }
+];
+const southtownePassedChecks = [
+  {
+    title: "Meta Title",
+    desc: "'Mark Miller Subaru South Towne | Subaru Dealer in Sandy, UT' — 59 chars (optimal)"
+  },
+  {
+    title: "Meta Description",
+    desc: "156 chars — within optimal 70-160 range"
+  },
+  {
+    title: "Mobile Viewport",
+    desc: "Viewport meta tag configured"
+  },
+  {
+    title: "HTTPS",
+    desc: "Site is served over HTTPS"
+  },
+  {
+    title: "Canonical URL",
+    desc: "Set to https://www.markmillersubarusouthtowne.com"
+  },
+  {
+    title: "Open Graph Tags",
+    desc: "og:title, og:description, og:image all present"
+  },
+  {
+    title: "Structured Data",
+    desc: "Offer JSON-LD schema detected"
+  },
+  {
+    title: "Content Depth",
+    desc: "964 words on homepage — above 300 minimum"
+  },
+  {
+    title: "Internal Links",
+    desc: "133 internal links found"
+  }
+];
+const southtowneTerminalLines = [
+  "$ MM Subaru Growth Agent v1.0 — Live Audit",
+  "> Last scan: March 17, 2026 3:25 PM",
+  "> Scraped markmillersubarusouthtowne.com — 18 images, 133 internal links, 964 words",
+  "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
+  "> - [WARNING] 2 images missing alt text out of 18 total",
+  "> - [WARNING] No Twitter Card meta tags — OG tags present",
+  "> - [PASS] Structured data: Offer schema detected",
+  "> - [PASS] Meta title (59 chars), description (156 chars), HTTPS, canonical URL",
+  "> - [PASS] Accessibility: 0 | Best Practices: 0 | SEO: 0",
+  "> 3 issues found. Ready for commands."
+];
 
 /* ───────── SUBARU DIGITAL ASSESSMENT SCORECARD ───────── */
 const scorecardData = {
