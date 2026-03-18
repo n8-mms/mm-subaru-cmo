@@ -24,7 +24,7 @@
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
-/* ───────── DATA (Live scraped March 17, 2026) ───────── */
+/* ───────── DATA (Live scraped March 18, 2026) ───────── */
 const healthData = {
   performance: 0,
   accessibility: 0,
@@ -182,21 +182,21 @@ const seoIssues = [
     title: "AI CMO Weekly Priority",
     severity: "Medium",
     category: "AI Recommendation",
-    details: "Immediately add a proper H1 tag to the homepage. The current page has zero H1 tags which is a critical SEO issue. Add <h1>Salt Lake City Subaru Dealer | Mark Miller Subaru Midtown & South Towne</h1> as the main headline, replacing or wrapping the current primary heading. This will provide essential page structure and improve search engine understanding of your primary focus."
+    details: "CRITICAL: Add proper H1 tags immediately. The homepage has zero H1 tags which severely impacts SEO. Add <h1>Salt Lake City Subaru Dealer | Mark Miller Subaru Midtown & South Towne</h1> to the homepage header section, and ensure every page has exactly one unique H1 tag that includes location-specific keywords like 'Salt Lake City' or 'Utah'."
   }
 ];
 
 const contentIdeas = [
   {
-    title: "Best Subaru Models for Utah Spring Hiking Season: Outback vs Forester vs Crosstrek Comparison",
+    title: "Best Subaru Models for Utah Spring Skiing and Summer Camping: Outback vs Forester Comparison",
     status: "Idea"
   },
   {
-    title: "2026 Subaru Ascent Review: Perfect Family SUV for Salt Lake City School Commutes",
+    title: "2026 Subaru Crosstrek Review: Perfect for Salt Lake City's City Creek Canyon Adventures",
     status: "Idea"
   },
   {
-    title: "Utah Road Trip Guide: Taking Your Subaru WRX Through Scenic Byway 12 This Spring",
+    title: "Why the 2026 Subaru Ascent is Ideal for Large Utah Families: Seating for 8 Plus AWD",
     status: "Idea"
   }
 ];
@@ -204,24 +204,24 @@ const contentIdeas = [
 const socialPosts = [
   {
     platform: "X",
-    content: "Spring break planning in SLC? Your Subaru Outback is ready for those weekend trips to Moab. All-wheel drive + ground clearance = adventure ready. Both our Midtown & South Towne locations have 2026s in stock! #SubaruUtah #SpringAdventure",
+    content: "Spring in the Wasatch means unpredictable weather. Good thing every Subaru comes standard with AWD. Whether you're heading to Park City or just navigating downtown SLC after a surprise snowfall, we've got you covered. #SubaruLove #SaltLakeCity",
     type: "Suggested Tweet"
   },
   {
     platform: "Reddit",
-    content: "r/SaltLakeCity - Share experience about which Subaru models handle the Sugar House to Big Cottonwood Canyon drive best in spring conditions",
+    content: "r/SaltLakeCity - Share your experience with AWD vehicles during Utah's spring weather transitions and recommend the Subaru Symmetrical AWD system for year-round confidence",
     type: "Reddit Opportunity"
   },
   {
     platform: "LinkedIn",
-    content: "As Utah's outdoor season kicks off, we're seeing increased demand for all-wheel drive vehicles. At Mark Miller Subaru, our March inventory reflects what Utahns need: capability, reliability, and adventure-ready features across our Outback and Forester lineups.",
+    content: "As Utah's outdoor recreation season kicks into high gear, Mark Miller Subaru is proud to equip Salt Lake families with vehicles built for adventure. From Little Cottonwood Canyon to Moab, our customers trust Subaru's reliability and safety.",
     type: "LinkedIn Post"
   }
 ];
 
 const terminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: March 17, 2026 3:25 PM",
+  "> Last scan: March 18, 2026 11:44 AM",
   "> Scraped markmillersubaru.com — 6 images, 70 internal links, 49 words",
   "> - [CRITICAL] No H1 tag on homepage. Only H2: 'One Store, Two Great Locations'",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
@@ -366,13 +366,13 @@ const midtownPassedChecks = [
   },
   {
     title: "Internal Links",
-    desc: "134 internal links found"
+    desc: "126 internal links found"
   }
 ];
 const midtownTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: March 17, 2026 3:25 PM",
-  "> Scraped markmillersubarumidtown.com — 18 images, 134 internal links, 955 words",
+  "> Last scan: March 18, 2026 11:44 AM",
+  "> Scraped markmillersubarumidtown.com — 18 images, 126 internal links, 955 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
   "> - [WARNING] 2 images missing alt text out of 18 total",
   "> - [WARNING] No Twitter Card meta tags — OG tags present",
@@ -523,13 +523,13 @@ const southtownePassedChecks = [
   },
   {
     title: "Internal Links",
-    desc: "133 internal links found"
+    desc: "128 internal links found"
   }
 ];
 const southtowneTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: March 17, 2026 3:25 PM",
-  "> Scraped markmillersubarusouthtowne.com — 18 images, 133 internal links, 964 words",
+  "> Last scan: March 18, 2026 11:44 AM",
+  "> Scraped markmillersubarusouthtowne.com — 18 images, 128 internal links, 964 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
   "> - [WARNING] 2 images missing alt text out of 18 total",
   "> - [WARNING] No Twitter Card meta tags — OG tags present",
