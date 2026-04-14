@@ -24,7 +24,7 @@
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
-/* ───────── DATA (Live scraped April 13, 2026) ───────── */
+/* ───────── DATA (Live scraped April 14, 2026) ───────── */
 const healthData = {
   performance: 0,
   accessibility: 0,
@@ -177,20 +177,26 @@ const seoIssues = [
     severity: "Medium",
     category: "Social",
     details: "LIVE DATA: No twitter:card meta tag found. Open Graph tags are present and correct. Adding Twitter Card tags would improve social sharing on X/Twitter."
+  },
+  {
+    title: "AI CMO Weekly Priority",
+    severity: "Medium",
+    category: "AI Recommendation",
+    details: "Immediately add a proper H1 tag to the homepage. Replace the current header with: <h1>Salt Lake City Subaru Dealer | Mark Miller Subaru Utah</h1>. This addresses the critical missing H1 issue and includes primary target keywords for local search visibility."
   }
 ];
 
 const contentIdeas = [
   {
-    title: "Best Subaru Models for Utah Spring Skiing: Outback vs Forester for Park City Access 2026",
+    title: "Best Subaru Models for Utah's Spring Wildflower Viewing: Outback vs Crosstrek Trail Access Guide",
     status: "Idea"
   },
   {
-    title: "Salt Lake City to Moab Road Trip Guide: Why the Subaru Crosstrek is Perfect for Utah's National Parks",
+    title: "2026 Subaru Forester Review: Perfect for Park City to Moab Road Trips This April",
     status: "Idea"
   },
   {
-    title: "Mark Miller Subaru Midtown vs South Towne: Which Location is Right for Your Utah County Commute",
+    title: "Salt Lake City Subaru Service: Preparing Your WRX for Summer Canyon Drives",
     status: "Idea"
   }
 ];
@@ -198,24 +204,24 @@ const contentIdeas = [
 const socialPosts = [
   {
     platform: "X",
-    content: "Spring skiing at Alta tomorrow? The new 2026 Subaru Outback handles those canyon roads like a dream. Stop by our Midtown location - we're literally 15 minutes from Little Cottonwood Canyon! #SubaruLife #UtahSkiing",
+    content: "April in Utah = time to explore those hidden canyon gems 🏔️ Your Subaru Outback is ready for whatever trail you choose. Who's hitting the backcountry this weekend? #Utah #SubaruLife #SaltLakeCity",
     type: "Suggested Tweet"
   },
   {
     platform: "Reddit",
-    content: "r/SaltLakeCity - Share your experience with AWD vehicles for canyon driving. Mention how Mark Miller Subaru has helped local families stay safe on those sketchy spring snow days with proper vehicle recommendations.",
+    content: "r/SaltLakeCity - Share real customer stories about how Subaru AWD helped during last week's surprise snowstorm in the Cottonwoods",
     type: "Reddit Opportunity"
   },
   {
     platform: "LinkedIn",
-    content: "As spring arrives in Salt Lake City, we're seeing more families at Mark Miller Subaru asking about adventure-ready vehicles. The 2026 Subaru Ascent has become incredibly popular with Utah families who need space for ski gear in winter and camping equipment for summer adventures. Our team takes pride in matching each family with the right Subaru for their unique Utah lifestyle.",
+    content: "As Utah's outdoor season kicks into high gear, we're seeing more families choose the Ascent for its 8-seat capacity and trail-rated capability. Perfect timing for spring break adventures to the Mighty Five.",
     type: "LinkedIn Post"
   }
 ];
 
 const terminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: April 13, 2026 11:41 AM",
+  "> Last scan: April 14, 2026 11:54 AM",
   "> Scraped markmillersubaru.com — 6 images, 70 internal links, 49 words",
   "> - [CRITICAL] No H1 tag on homepage. Only H2: 'One Store, Two Great Locations'",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
@@ -365,7 +371,7 @@ const midtownPassedChecks = [
 ];
 const midtownTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: April 13, 2026 11:41 AM",
+  "> Last scan: April 14, 2026 11:54 AM",
   "> Scraped markmillersubarumidtown.com — 15 images, 127 internal links, 851 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
   "> - [WARNING] 2 images missing alt text out of 15 total",
@@ -522,7 +528,7 @@ const southtownePassedChecks = [
 ];
 const southtowneTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: April 13, 2026 11:41 AM",
+  "> Last scan: April 14, 2026 11:54 AM",
   "> Scraped markmillersubarusouthtowne.com — 15 images, 129 internal links, 857 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
   "> - [WARNING] 2 images missing alt text out of 15 total",
