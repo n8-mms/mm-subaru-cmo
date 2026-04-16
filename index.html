@@ -24,7 +24,7 @@
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
-/* ───────── DATA (Live scraped April 15, 2026) ───────── */
+/* ───────── DATA (Live scraped April 16, 2026) ───────── */
 const healthData = {
   performance: 0,
   accessibility: 0,
@@ -182,21 +182,21 @@ const seoIssues = [
     title: "AI CMO Weekly Priority",
     severity: "Medium",
     category: "AI Recommendation",
-    details: "CRITICAL: Add an H1 tag to the homepage immediately. Insert <h1>Salt Lake City Subaru Dealer | Mark Miller Subaru Midtown & South Towne</h1> as the main headline. The complete absence of H1 tags is severely impacting search rankings and should be fixed within 24 hours."
+    details: "CRITICAL: Add an H1 tag to your homepage immediately. Insert <h1>Salt Lake City Subaru Dealer | Mark Miller Subaru</h1> as the main headline. The complete absence of H1 tags is severely impacting search rankings and the 0/100 SEO score. This should be implemented within 24 hours as it's fundamental for search engine understanding of page content."
   }
 ];
 
 const contentIdeas = [
   {
-    title: "Best Subaru Models for Utah's Spring Road Construction Season: Outback vs Forester Ground Clearance",
+    title: "Best Subaru Models for Utah's Spring Mountain Biking Season: Outback vs Forester Cargo Comparison",
     status: "Idea"
   },
   {
-    title: "2024 Subaru Crosstrek: Perfect for Salt Lake City's New Bike Lane Network and Weekend Park City Trips",
+    title: "2026 Subaru Crosstrek Hybrid Review: Perfect for Salt Lake City's New EV Incentives",
     status: "Idea"
   },
   {
-    title: "Why Draper and South Jordan Families Choose Subaru Ascent: Local Family Review Roundup",
+    title: "Subaru Service Centers in Salt Lake City: Mark Miller Midtown vs South Towne Location Guide",
     status: "Idea"
   }
 ];
@@ -204,24 +204,24 @@ const contentIdeas = [
 const socialPosts = [
   {
     platform: "X",
-    content: "Spring in the Wasatch means one thing: time to get that Outback ready for camping season! Anyone else already planning their first trip to the Uintas? 🏔️ #SubaruLife #UtahOutdoors",
+    content: "Spring skiing at Alta turning into mountain biking at Millcreek? Your Subaru Outback handles both seasons like a champ. Utah adventures don't stop when the snow melts! #UtahLife #SubaruOutback #SaltLakeCity",
     type: "Suggested Tweet"
   },
   {
     platform: "Reddit",
-    content: "r/SaltLakeCity - Share photos of Subarus handling Utah's unique driving conditions (snow, construction, mountain roads) and engage with comments about all-wheel drive benefits",
+    content: "r/SaltLakeCity - Share experiences about dealership service quality in the valley, mention Mark Miller's two convenient locations and ask about others' Subaru maintenance experiences",
     type: "Reddit Opportunity"
   },
   {
     platform: "LinkedIn",
-    content: "As Utah's economy grows, more families are choosing reliable transportation. Here's why the Subaru Forester has become the unofficial vehicle of Salt Lake's tech corridor families.",
+    content: "As Utah's outdoor recreation economy grows, we're seeing more families choose all-wheel drive vehicles year-round. At Mark Miller Subaru, we're proud to serve adventurous Salt Lakers from our Midtown and South Towne locations.",
     type: "LinkedIn Post"
   }
 ];
 
 const terminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: April 15, 2026 11:49 AM",
+  "> Last scan: April 16, 2026 12:15 PM",
   "> Scraped markmillersubaru.com — 6 images, 70 internal links, 49 words",
   "> - [CRITICAL] No H1 tag on homepage. Only H2: 'One Store, Two Great Locations'",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
@@ -263,7 +263,7 @@ const midtownSeoHealth = [
   },
   {
     label: "Images Missing Alt",
-    value: "2 of 15",
+    value: "2 of 14",
     pass: false
   },
   {
@@ -324,7 +324,7 @@ const midtownSeoIssues = [
     title: "2 Images Without Alt Text",
     severity: "Critical",
     category: "On-Page",
-    details: "LIVE DATA: 2 of 15 images are missing alt text."
+    details: "LIVE DATA: 2 of 14 images are missing alt text."
   },
   {
     title: "Performance Score: 0 — Critical Page Speed Issues",
@@ -362,7 +362,7 @@ const midtownPassedChecks = [
   },
   {
     title: "Content Depth",
-    desc: "851 words on homepage — above 300 minimum"
+    desc: "825 words on homepage — above 300 minimum"
   },
   {
     title: "Internal Links",
@@ -371,10 +371,10 @@ const midtownPassedChecks = [
 ];
 const midtownTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: April 15, 2026 11:49 AM",
-  "> Scraped markmillersubarumidtown.com — 15 images, 127 internal links, 851 words",
+  "> Last scan: April 16, 2026 12:15 PM",
+  "> Scraped markmillersubarumidtown.com — 14 images, 127 internal links, 825 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
-  "> - [WARNING] 2 images missing alt text out of 15 total",
+  "> - [WARNING] 2 images missing alt text out of 14 total",
   "> - [WARNING] No Twitter Card meta tags — OG tags present",
   "> - [PASS] Structured data: Offer schema detected",
   "> - [PASS] Meta title (90 chars), description (205 chars), HTTPS, canonical URL",
@@ -412,7 +412,7 @@ const southtowneSeoHealth = [
   },
   {
     label: "Images Missing Alt",
-    value: "2 of 15",
+    value: "2 of 14",
     pass: false
   },
   {
@@ -473,7 +473,7 @@ const southtowneSeoIssues = [
     title: "2 Images Without Alt Text",
     severity: "Critical",
     category: "On-Page",
-    details: "LIVE DATA: 2 of 15 images are missing alt text."
+    details: "LIVE DATA: 2 of 14 images are missing alt text."
   },
   {
     title: "Performance Score: 0 — Critical Page Speed Issues",
@@ -519,7 +519,7 @@ const southtownePassedChecks = [
   },
   {
     title: "Content Depth",
-    desc: "857 words on homepage — above 300 minimum"
+    desc: "831 words on homepage — above 300 minimum"
   },
   {
     title: "Internal Links",
@@ -528,10 +528,10 @@ const southtownePassedChecks = [
 ];
 const southtowneTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: April 15, 2026 11:49 AM",
-  "> Scraped markmillersubarusouthtowne.com — 15 images, 129 internal links, 857 words",
+  "> Last scan: April 16, 2026 12:15 PM",
+  "> Scraped markmillersubarusouthtowne.com — 14 images, 129 internal links, 831 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
-  "> - [WARNING] 2 images missing alt text out of 15 total",
+  "> - [WARNING] 2 images missing alt text out of 14 total",
   "> - [WARNING] No Twitter Card meta tags — OG tags present",
   "> - [PASS] Structured data: Offer schema detected",
   "> - [PASS] Meta title (59 chars), description (156 chars), HTTPS, canonical URL",
