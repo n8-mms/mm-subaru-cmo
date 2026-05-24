@@ -24,7 +24,7 @@
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
-/* ───────── DATA (Live scraped May 23, 2026) ───────── */
+/* ───────── DATA (Live scraped May 24, 2026) ───────── */
 const healthData = {
   performance: 0,
   accessibility: 0,
@@ -182,7 +182,7 @@ const seoIssues = [
     title: "AI CMO Weekly Priority",
     severity: "Medium",
     category: "AI Recommendation",
-    details: "Immediately add a proper H1 tag to the homepage. The most critical issue is the missing H1 tag. Add <h1>Salt Lake City Subaru Dealer | Mark Miller Subaru Midtown & South Towne</h1> as the primary heading, incorporating location-specific keywords that Utah car shoppers are searching for."
+    details: "Immediately add a proper H1 tag to the homepage. The current page has zero H1 tags which is critical for SEO. Add <h1>Mark Miller Subaru - New & Used Subaru Dealer in Salt Lake City, Utah</h1> as the main heading, incorporating primary local keywords while maintaining the dual-location messaging."
   }
 ];
 
@@ -192,11 +192,11 @@ const contentIdeas = [
     status: "Idea"
   },
   {
-    title: "Memorial Day Weekend Car Shopping: Why Salt Lake City Chooses Mark Miller Subaru",
+    title: "Memorial Day Weekend Adventures: Top Utah Trails Accessible with Your Subaru Crosstrek",
     status: "Idea"
   },
   {
-    title: "Subaru Crosstrek Adventures: Top 5 Utah National Parks Within Driving Distance of SLC",
+    title: "Salt Lake City Subaru Service Guide: Preparing Your WRX for Summer Mountain Driving",
     status: "Idea"
   }
 ];
@@ -204,24 +204,24 @@ const contentIdeas = [
 const socialPosts = [
   {
     platform: "X",
-    content: "Just helped another family from Millcreek find their perfect Ascent for summer camping trips to Moab. There's something special about matching Utah families with the right Subaru adventure vehicle 🏔️ #UtahSubaru #SaltLakeCity",
+    content: "Just saw three Outbacks parked at Millcreek Canyon trailhead this morning 🏔️ Utah drivers know what's up when it comes to adventure-ready vehicles. What's your favorite local trail accessible by Subaru? #UtahAdventure #SubaruLife",
     type: "Suggested Tweet"
   },
   {
     platform: "Reddit",
-    content: "r/SaltLakeCity - Local dealership owner here. With summer approaching, what features matter most to you when shopping for a vehicle in Utah? Always curious about what our community prioritizes.",
+    content: "r/SaltLakeCity - Share your experience with local Subaru dealerships and which models handle Utah's diverse terrain best. Focus on real ownership experiences rather than sales pitches.",
     type: "Reddit Opportunity"
   },
   {
     platform: "LinkedIn",
-    content: "As we head into Memorial Day weekend, reflecting on how Mark Miller Subaru has served Salt Lake City families for decades. From first cars for new drivers in Sugar House to reliable Outbacks for Park City commuters - grateful to be part of this community's journey.",
+    content: "As we head into Memorial Day weekend, our team at Mark Miller Subaru is proud to serve Salt Lake City families who choose adventure. From Park City slopes to Moab trails, we've seen firsthand how the right vehicle connects Utah families to the outdoors they love.",
     type: "LinkedIn Post"
   }
 ];
 
 const terminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: May 23, 2026 9:09 AM",
+  "> Last scan: May 24, 2026 9:12 AM",
   "> Scraped markmillersubaru.com — 6 images, 70 internal links, 49 words",
   "> - [CRITICAL] No H1 tag on homepage. Only H2: 'One Store, Two Great Locations'",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
@@ -371,7 +371,7 @@ const midtownPassedChecks = [
 ];
 const midtownTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: May 23, 2026 9:09 AM",
+  "> Last scan: May 24, 2026 9:12 AM",
   "> Scraped markmillersubarumidtown.com — 16 images, 133 internal links, 978 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
   "> - [WARNING] 2 images missing alt text out of 16 total",
@@ -528,7 +528,7 @@ const southtownePassedChecks = [
 ];
 const southtowneTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: May 23, 2026 9:09 AM",
+  "> Last scan: May 24, 2026 9:12 AM",
   "> Scraped markmillersubarusouthtowne.com — 16 images, 127 internal links, 1989 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
   "> - [WARNING] 2 images missing alt text out of 16 total",
