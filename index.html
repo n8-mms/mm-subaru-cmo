@@ -24,7 +24,7 @@
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
-/* ───────── DATA (Live scraped June 3, 2026) ───────── */
+/* ───────── DATA (Live scraped June 4, 2026) ───────── */
 const healthData = {
   performance: 0,
   accessibility: 0,
@@ -182,21 +182,21 @@ const seoIssues = [
     title: "AI CMO Weekly Priority",
     severity: "Medium",
     category: "AI Recommendation",
-    details: "Immediately add a proper H1 tag to the homepage. Replace the current header with <h1>Mark Miller Subaru Dealer Salt Lake City - Midtown & South Towne Locations</h1>. This addresses the critical missing H1 tag issue and includes primary local keywords for better search visibility."
+    details: "Immediately add a proper H1 tag to the homepage. Replace the current header with: <h1>Mark Miller Subaru Dealer - Two Salt Lake City Utah Locations</h1>. This critical missing element is hurting search visibility and should be implemented within 24 hours."
   }
 ];
 
 const contentIdeas = [
   {
-    title: "Best Subaru Models for Utah Winter 2026: Outback vs Forester for Wasatch Mountain Adventures",
+    title: "Best Subaru Models for Utah Summer Road Trips: Outback vs Forester Comparison 2026",
     status: "Idea"
   },
   {
-    title: "Where to Find the Best Subaru Service in Salt Lake City: Mark Miller Midtown vs South Towne Location Guide",
+    title: "Where to Service Your Subaru in Salt Lake City: Mark Miller's Midtown vs South Towne Location Guide",
     status: "Idea"
   },
   {
-    title: "2026 Subaru Crosstrek Review: Perfect for Park City Ski Season and Big Cottonwood Canyon Drives",
+    title: "2026 Subaru Crosstrek: Perfect for Park City Summer Adventures and Millcreek Canyon Trails",
     status: "Idea"
   }
 ];
@@ -204,24 +204,24 @@ const contentIdeas = [
 const socialPosts = [
   {
     platform: "X",
-    content: "Just saw another Outback crushing the snow up Little Cottonwood Canyon this morning ❄️ These Utah winters don't stand a chance against proper AWD. Who else is ready for ski season? #UtahLife #SubaruLove",
+    content: "That moment when your Subaru Outback handles the Cottonwood Canyon curves like butter 🏔️ Perfect weather this week for mountain drives! #SubaruLife #SaltLakeCity #Utah",
     type: "Suggested Tweet"
   },
   {
     platform: "Reddit",
-    content: "r/SaltLakeCity - Share your experience with local Subaru dealers and why AWD is essential for Wasatch Front living",
+    content: "r/SaltLakeCity - Share maintenance tips for Subarus in Utah's unique climate conditions, engage with posts about best local dealership service experiences",
     type: "Reddit Opportunity"
   },
   {
     platform: "LinkedIn",
-    content: "Proud to serve the Salt Lake City community from our Midtown and South Towne locations. Utah drivers deserve reliable AWD vehicles that can handle everything from downtown commutes to weekend adventures in our beautiful mountains.",
+    content: "Mark Miller Subaru is proud to serve Utah families with two convenient locations. From Sugarhouse to West Valley, we're here to keep your adventures rolling. What's your favorite Utah destination to explore with your Subaru?",
     type: "LinkedIn Post"
   }
 ];
 
 const terminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: June 3, 2026 12:24 PM",
+  "> Last scan: June 4, 2026 11:15 AM",
   "> Scraped markmillersubaru.com — 6 images, 70 internal links, 78 words",
   "> - [CRITICAL] No H1 tag on homepage. Only H2: 'One Store, Two Great Locations'",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
@@ -263,7 +263,7 @@ const midtownSeoHealth = [
   },
   {
     label: "Images Missing Alt",
-    value: "2 of 15",
+    value: "2 of 23",
     pass: false
   },
   {
@@ -324,7 +324,7 @@ const midtownSeoIssues = [
     title: "2 Images Without Alt Text",
     severity: "Critical",
     category: "On-Page",
-    details: "LIVE DATA: 2 of 15 images are missing alt text."
+    details: "LIVE DATA: 2 of 23 images are missing alt text."
   },
   {
     title: "Performance Score: 0 — Critical Page Speed Issues",
@@ -362,7 +362,7 @@ const midtownPassedChecks = [
   },
   {
     title: "Content Depth",
-    desc: "969 words on homepage — above 300 minimum"
+    desc: "1307 words on homepage — above 300 minimum"
   },
   {
     title: "Internal Links",
@@ -371,10 +371,10 @@ const midtownPassedChecks = [
 ];
 const midtownTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: June 3, 2026 12:24 PM",
-  "> Scraped markmillersubarumidtown.com — 15 images, 134 internal links, 969 words",
+  "> Last scan: June 4, 2026 11:15 AM",
+  "> Scraped markmillersubarumidtown.com — 23 images, 134 internal links, 1307 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
-  "> - [WARNING] 2 images missing alt text out of 15 total",
+  "> - [WARNING] 2 images missing alt text out of 23 total",
   "> - [WARNING] No Twitter Card meta tags — OG tags present",
   "> - [PASS] Structured data: Offer schema detected",
   "> - [PASS] Meta title (90 chars), description (205 chars), HTTPS, canonical URL",
@@ -412,7 +412,7 @@ const southtowneSeoHealth = [
   },
   {
     label: "Images Missing Alt",
-    value: "2 of 15",
+    value: "2 of 23",
     pass: false
   },
   {
@@ -473,7 +473,7 @@ const southtowneSeoIssues = [
     title: "2 Images Without Alt Text",
     severity: "Critical",
     category: "On-Page",
-    details: "LIVE DATA: 2 of 15 images are missing alt text."
+    details: "LIVE DATA: 2 of 23 images are missing alt text."
   },
   {
     title: "Performance Score: 0 — Critical Page Speed Issues",
@@ -519,7 +519,7 @@ const southtownePassedChecks = [
   },
   {
     title: "Content Depth",
-    desc: "1980 words on homepage — above 300 minimum"
+    desc: "2324 words on homepage — above 300 minimum"
   },
   {
     title: "Internal Links",
@@ -528,10 +528,10 @@ const southtownePassedChecks = [
 ];
 const southtowneTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: June 3, 2026 12:24 PM",
-  "> Scraped markmillersubarusouthtowne.com — 15 images, 127 internal links, 1980 words",
+  "> Last scan: June 4, 2026 11:15 AM",
+  "> Scraped markmillersubarusouthtowne.com — 23 images, 127 internal links, 2324 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
-  "> - [WARNING] 2 images missing alt text out of 15 total",
+  "> - [WARNING] 2 images missing alt text out of 23 total",
   "> - [WARNING] No Twitter Card meta tags — OG tags present",
   "> - [PASS] Structured data: Offer schema detected",
   "> - [PASS] Meta title (59 chars), description (156 chars), HTTPS, canonical URL",
