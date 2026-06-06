@@ -24,7 +24,7 @@
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
-/* ───────── DATA (Live scraped June 5, 2026) ───────── */
+/* ───────── DATA (Live scraped June 6, 2026) ───────── */
 const healthData = {
   performance: 0,
   accessibility: 0,
@@ -177,20 +177,26 @@ const seoIssues = [
     severity: "Medium",
     category: "Social",
     details: "LIVE DATA: No twitter:card meta tag found. Open Graph tags are present and correct. Adding Twitter Card tags would improve social sharing on X/Twitter."
+  },
+  {
+    title: "AI CMO Weekly Priority",
+    severity: "Medium",
+    category: "AI Recommendation",
+    details: "Immediately add a proper H1 tag to the homepage. Insert <h1>Salt Lake City Subaru Dealer | Mark Miller Subaru Midtown & South Towne</h1> as the main headline, replacing any existing large text that isn't properly tagged. This addresses the critical missing H1 issue affecting SEO structure."
   }
 ];
 
 const contentIdeas = [
   {
-    title: "Best Subaru Models for Utah Summer Road Trips: Outback vs Forester Comparison 2026",
+    title: "2027 Subaru Outback vs Honda Passport: Best Family SUV for Utah Mountains",
     status: "Idea"
   },
   {
-    title: "Where to Service Your Subaru in Salt Lake City: Mark Miller's Midtown vs South Towne Location Guide",
+    title: "Top 5 Salt Lake City Neighborhoods Perfect for New Subaru Owners in 2026",
     status: "Idea"
   },
   {
-    title: "2026 Subaru Crosstrek: Perfect for Park City Summer Adventures and Millcreek Canyon Trails",
+    title: "Summer Road Trip Planning: Subaru Forester Cargo Space Guide for Utah Families",
     status: "Idea"
   }
 ];
@@ -198,24 +204,24 @@ const contentIdeas = [
 const socialPosts = [
   {
     platform: "X",
-    content: "That moment when your Subaru Outback handles the Cottonwood Canyon curves like butter 🏔️ Perfect weather this week for mountain drives! #SubaruLife #SaltLakeCity #Utah",
+    content: "Just saw another Outback at the Millcreek farmers market this morning. Utah really knows good cars ☕️🏔️ #SubaruLife #MillcreekUT",
     type: "Suggested Tweet"
   },
   {
     platform: "Reddit",
-    content: "r/SaltLakeCity - Share maintenance tips for Subarus in Utah's unique climate conditions, engage with posts about best local dealership service experiences",
+    content: "r/SaltLakeCity - Share your favorite lesser-known hiking spots accessible with a Crosstrek's ground clearance",
     type: "Reddit Opportunity"
   },
   {
     platform: "LinkedIn",
-    content: "Mark Miller Subaru is proud to serve Utah families with two convenient locations. From Sugarhouse to West Valley, we're here to keep your adventures rolling. What's your favorite Utah destination to explore with your Subaru?",
+    content: "Proud to serve Utah families for another year. Our Midtown location just helped its 500th customer this month find their perfect Subaru match for mountain adventures.",
     type: "LinkedIn Post"
   }
 ];
 
 const terminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: June 5, 2026 10:33 AM",
+  "> Last scan: June 6, 2026 9:20 AM",
   "> Scraped markmillersubaru.com — 6 images, 71 internal links, 78 words",
   "> - [CRITICAL] No H1 tag on homepage. Only H2: 'One Store, Two Great Locations'",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
@@ -365,7 +371,7 @@ const midtownPassedChecks = [
 ];
 const midtownTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: June 5, 2026 10:33 AM",
+  "> Last scan: June 6, 2026 9:20 AM",
   "> Scraped markmillersubarumidtown.com — 24 images, 135 internal links, 1373 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
   "> - [WARNING] 2 images missing alt text out of 24 total",
@@ -513,7 +519,7 @@ const southtownePassedChecks = [
   },
   {
     title: "Content Depth",
-    desc: "2387 words on homepage — above 300 minimum"
+    desc: "2388 words on homepage — above 300 minimum"
   },
   {
     title: "Internal Links",
@@ -522,8 +528,8 @@ const southtownePassedChecks = [
 ];
 const southtowneTerminalLines = [
   "$ MM Subaru Growth Agent v1.0 — Live Audit",
-  "> Last scan: June 5, 2026 10:33 AM",
-  "> Scraped markmillersubarusouthtowne.com — 24 images, 128 internal links, 2387 words",
+  "> Last scan: June 6, 2026 9:20 AM",
+  "> Scraped markmillersubarusouthtowne.com — 24 images, 128 internal links, 2388 words",
   "> - [CRITICAL] Mobile Performance: 0/100 — LCP N/A, FCP N/A, TBT N/A",
   "> - [WARNING] 2 images missing alt text out of 24 total",
   "> - [WARNING] No Twitter Card meta tags — OG tags present",
